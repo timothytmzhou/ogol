@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 using std::string;
 
 namespace ogol::core {
@@ -16,10 +17,10 @@ enum class TokenType { kInteger, kReal, kString, kIdentifier, kGrouping };
  */
 class Token {
 public:
-  Token(TokenType token_type, string value)
-      : token_type(token_type), value(value) {}
+  Token(const TokenType& token_type, string  value, size_t line_num);
   TokenType token_type;
   string value;
+  size_t line_num;
 };
 
 /**

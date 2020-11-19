@@ -15,7 +15,7 @@ namespace ogol::core {
 
 // tokens are delimited by chains of space-like characters
 // these will be skipped during lexical analysis
-const string kSeparatorPattern = "\\s";
+const string kSeparatorPattern = "\\s+";
 // parenthesis act as  grouping elements
 const string kGroupingPattern = "[()]";
 // integers are strings of digits
@@ -35,8 +35,7 @@ const map<string, TokenType> kTokenPatterns{
     {kRealPattern, TokenType::kReal},
     {kStringPattern, TokenType::kString},
     {kIdentifierPattern, TokenType::kIdentifier},
-    {kGroupingPattern, TokenType::kGrouping}
-};
+    {kGroupingPattern, TokenType::kGrouping}};
 
 /**
  * Loads and tokenizes source code into a parsable form. Overloads the <<
@@ -70,6 +69,12 @@ public:
 
 private:
   string source_;
+  size_t current_line_ = 1;
+  /**
+   * Helper method to handle whitespaces. Returns true if whitespace was
+   * consumed and the iterator was advanced.
+   */
+  bool read_whitespaces(string::iterator &it);
   /**
    * Checks if the beginning of the source matches the supplied pattern. Returns
    * an empty string if there is no matching source, otherwise returns the
@@ -83,7 +88,7 @@ private:
   /**
    * Handles a token which cannot be identified by the lexer.
    */
-  void handle_invalid_token(string::iterator invalid);
+  void handle_invalid_token(const string& remaining);
 };
 
 } // namespace ogol::core

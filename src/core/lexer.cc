@@ -8,28 +8,41 @@ namespace ogol::core {
 queue<Token> ogol::core::Lexer::tokenize() {
   queue<Token> tokens;
   for (auto it = source_.begin(); it != source_.end();) {
-    string sub = string(it, source_.end());
+    string remaining = string(it, source_.end());
     // skip whitespaces
-    if (std::regex_search(sub, std::regex("^" + kSeparatorPattern))) {
-      ++it;
+    if (read_whitespaces(it)) {
       continue;
     }
     bool found_match = false;
     // iterate through patterns, checking each one to see if they match
     for (auto const &[pattern, token_type] : kTokenPatterns) {
-      string m = check_pattern(sub, pattern);
+      string m = check_pattern(remaining, pattern);
       if (!m.empty()) {
         it += m.length();
-        tokens.emplace(token_type, m);
+        tokens.emplace(token_type, m, current_line_);
         found_match = true;
         break;
       }
     }
     if (!found_match) {
-      handle_invalid_token(it);
+      handle_invalid_token(remaining);
     }
   }
   return tokens;
+}
+
+bool Lexer::read_whitespaces(string::iterator &it) {
+  std::smatch m;
+  string sub(it, source_.end());
+  if (std::regex_search(sub, m, std::regex("^" + kSeparatorPattern))) {
+    // updates current line number based on number of new lines counted
+    string separators = m.str();
+    it += separators.length();
+    current_line_ += std::count(separators.begin(), separators.end(), '\n');
+    return true;
+  } else {
+    return false;
+  }
 }
 
 string Lexer::check_pattern(const string &source, const string &pattern) {
@@ -51,20 +64,11 @@ string Lexer::check_pattern(const string &source, const string &pattern) {
   }
 }
 
-void Lexer::handle_invalid_token(string::iterator invalid) {
-  // gets line of invalid token
-  size_t i = 1;
-  auto it = source_.begin();
-  for (; it != invalid; ++it) {
-    if (*it == '\n') {
-      ++i;
-    }
-  }
-  std::smatch m;
-  string remaining = string(it, source_.end());
-  std::regex_search(remaining, m, regex("^\\w+"));
-  throw LexError(
-      boost::str(boost::format("Invalid token at line %i: %s") % i % m.str()));
+void Lexer::handle_invalid_token(const string &remaining) {
+  std::smatch invalid_token;
+  std::regex_search(remaining, invalid_token, regex("^\\w+"));
+  throw LexError(boost::str(boost::format("Invalid token at line %i: %s") %
+                            current_line_ % invalid_token.str()));
 }
 
 std::iostream &operator>>(std::iostream &input, Lexer &lexer) {

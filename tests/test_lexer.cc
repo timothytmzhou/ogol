@@ -10,45 +10,52 @@ using ogol::core::Token;
 using ogol::core::TokenType;
 using std::queue;
 
+TEST_CASE("Tokens are assigned correct line number") {
+  Lexer lexer;
+  "a\nb c\n\nd\n" >> lexer;
+  queue<Token> expected;
+  expected.emplace(TokenType::kIdentifier, "a", 1);
+  expected.emplace(TokenType::kIdentifier, "b", 2);
+  expected.emplace(TokenType::kIdentifier, "c", 2);
+  expected.emplace(TokenType::kIdentifier, "d", 4);
+  REQUIRE(lexer.tokenize() == expected);
+}
+
 TEST_CASE("Whitespace characters between tokens is ignored") {
   Lexer lexer;
   SECTION("Single spaces") {
     "a b c" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "a"));
-    expected.emplace(Token(TokenType::kIdentifier, "b"));
-    expected.emplace(Token(TokenType::kIdentifier, "c"));
-
+    expected.emplace(TokenType::kIdentifier, "a", 1);
+    expected.emplace(TokenType::kIdentifier, "b", 1);
+    expected.emplace(TokenType::kIdentifier, "c", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Multiple spaces") {
     "a    b  c" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "a"));
-    expected.emplace(Token(TokenType::kIdentifier, "b"));
-    expected.emplace(Token(TokenType::kIdentifier, "c"));
-
+    expected.emplace(TokenType::kIdentifier, "a", 1);
+    expected.emplace(TokenType::kIdentifier, "b", 1);
+    expected.emplace(TokenType::kIdentifier, "c", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Mixed whitespace characters") {
     "a\n\t b   \nc" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "a"));
-    expected.emplace(Token(TokenType::kIdentifier, "b"));
-    expected.emplace(Token(TokenType::kIdentifier, "c"));
-
+    expected.emplace(TokenType::kIdentifier, "a", 1);
+    expected.emplace(TokenType::kIdentifier, "b", 2);
+    expected.emplace(TokenType::kIdentifier, "c", 3);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Trailing whitespace is ignored") {
     "a\n\t b   \nc      \n\n" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "a"));
-    expected.emplace(Token(TokenType::kIdentifier, "b"));
-    expected.emplace(Token(TokenType::kIdentifier, "c"));
-
+    expected.emplace(TokenType::kIdentifier, "a", 1);
+    expected.emplace(TokenType::kIdentifier, "b", 2);
+    expected.emplace(TokenType::kIdentifier, "c", 3);
     REQUIRE(lexer.tokenize() == expected);
   }
 }
@@ -58,17 +65,17 @@ TEST_CASE("Integer tokenization") {
   SECTION("Positive integers") {
     "1 0 9" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kInteger, "1"));
-    expected.emplace(Token(TokenType::kInteger, "0"));
-    expected.emplace(Token(TokenType::kInteger, "9"));
+    expected.emplace(TokenType::kInteger, "1", 1);
+    expected.emplace(TokenType::kInteger, "0", 1);
+    expected.emplace(TokenType::kInteger, "9", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
   SECTION("Negative integers") {
     "-1 -0 -9" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kInteger, "-1"));
-    expected.emplace(Token(TokenType::kInteger, "-0"));
-    expected.emplace(Token(TokenType::kInteger, "-9"));
+    expected.emplace(TokenType::kInteger, "-1", 1);
+    expected.emplace(TokenType::kInteger, "-0", 1);
+    expected.emplace(TokenType::kInteger, "-9", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 }
@@ -78,22 +85,22 @@ TEST_CASE("Real tokenization") {
   SECTION("Real with digits before decimal") {
     "3.1415" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kReal, "3.1415"));
+    expected.emplace(TokenType::kReal, "3.1415", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Real with no digit before decimal") {
     ".91" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kReal, ".91"));
+    expected.emplace(TokenType::kReal, ".91", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Negative reals") {
     "-.91 -3.14" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kReal, "-.91"));
-    expected.emplace(Token(TokenType::kReal, "-3.14"));
+    expected.emplace(TokenType::kReal, "-.91", 1);
+    expected.emplace(TokenType::kReal, "-3.14", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 }
@@ -103,9 +110,10 @@ TEST_CASE("String tokenization") {
     "'In Mesoamerica, string was invented some 20,000 to 30,000 years ago'" >>
         lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kString,
-                           "'In Mesoamerica, string was invented some "
-                           "20,000 to 30,000 years ago'"));
+    expected.emplace(TokenType::kString,
+                     "'In Mesoamerica, string was invented some "
+                     "20,000 to 30,000 years ago'",
+                     1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
@@ -113,17 +121,18 @@ TEST_CASE("String tokenization") {
     R"("In Mesoamerica, string was invented some 20,000 to 30,000 years ago")" >>
         lexer;
     queue<Token> expected;
-    expected.emplace(Token(
+    expected.emplace(
         TokenType::kString,
-        R"("In Mesoamerica, string was invented some 20,000 to 30,000 years ago")"));
+        R"("In Mesoamerica, string was invented some 20,000 to 30,000 years ago")",
+        1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Individual strings are tokenized individually") {
     R"("I like strings" "a lot")" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kString, "\"I like strings\""));
-    expected.emplace(Token(TokenType::kString, "\"a lot\""));
+    expected.emplace(TokenType::kString, "\"I like strings\"", 1);
+    expected.emplace(TokenType::kString, "\"a lot\"", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 }
@@ -133,17 +142,17 @@ TEST_CASE("Identifier tokenization") {
   SECTION("Single-character symbolic identifiers") {
     "+ - * / < = > ! ^ | &" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "+"));
-    expected.emplace(Token(TokenType::kIdentifier, "-"));
-    expected.emplace(Token(TokenType::kIdentifier, "*"));
-    expected.emplace(Token(TokenType::kIdentifier, "/"));
-    expected.emplace(Token(TokenType::kIdentifier, "<"));
-    expected.emplace(Token(TokenType::kIdentifier, "="));
-    expected.emplace(Token(TokenType::kIdentifier, ">"));
-    expected.emplace(Token(TokenType::kIdentifier, "!"));
-    expected.emplace(Token(TokenType::kIdentifier, "^"));
-    expected.emplace(Token(TokenType::kIdentifier, "|"));
-    expected.emplace(Token(TokenType::kIdentifier, "&"));
+    expected.emplace(TokenType::kIdentifier, "+", 1);
+    expected.emplace(TokenType::kIdentifier, "-", 1);
+    expected.emplace(TokenType::kIdentifier, "*", 1);
+    expected.emplace(TokenType::kIdentifier, "/", 1);
+    expected.emplace(TokenType::kIdentifier, "<", 1);
+    expected.emplace(TokenType::kIdentifier, "=", 1);
+    expected.emplace(TokenType::kIdentifier, ">", 1);
+    expected.emplace(TokenType::kIdentifier, "!", 1);
+    expected.emplace(TokenType::kIdentifier, "^", 1);
+    expected.emplace(TokenType::kIdentifier, "|", 1);
+    expected.emplace(TokenType::kIdentifier, "&", 1);
 
     REQUIRE(lexer.tokenize() == expected);
   }
@@ -153,36 +162,36 @@ TEST_CASE("Identifier tokenization") {
     // purposes)
     "!= >> << +++ &=" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "!="));
-    expected.emplace(Token(TokenType::kIdentifier, ">>"));
-    expected.emplace(Token(TokenType::kIdentifier, "<<"));
-    expected.emplace(Token(TokenType::kIdentifier, "+++"));
-    expected.emplace(Token(TokenType::kIdentifier, "&="));
+    expected.emplace(TokenType::kIdentifier, "!=", 1);
+    expected.emplace(TokenType::kIdentifier, ">>", 1);
+    expected.emplace(TokenType::kIdentifier, "<<", 1);
+    expected.emplace(TokenType::kIdentifier, "+++", 1);
+    expected.emplace(TokenType::kIdentifier, "&=", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Alphabetical identifiers") {
     "x y foo" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "x"));
-    expected.emplace(Token(TokenType::kIdentifier, "y"));
-    expected.emplace(Token(TokenType::kIdentifier, "foo"));
+    expected.emplace(TokenType::kIdentifier, "x", 1);
+    expected.emplace(TokenType::kIdentifier, "y", 1);
+    expected.emplace(TokenType::kIdentifier, "foo", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Alphanumeric identifiers") {
     "x1 y1" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "x1"));
-    expected.emplace(Token(TokenType::kIdentifier, "y1"));
+    expected.emplace(TokenType::kIdentifier, "x1", 1);
+    expected.emplace(TokenType::kIdentifier, "y1", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
   SECTION("Identifiers with underscores") {
     "i_luv_snake_case _uwu_" >> lexer;
     queue<Token> expected;
-    expected.emplace(Token(TokenType::kIdentifier, "i_luv_snake_case"));
-    expected.emplace(Token(TokenType::kIdentifier, "_uwu_"));
+    expected.emplace(TokenType::kIdentifier, "i_luv_snake_case", 1);
+    expected.emplace(TokenType::kIdentifier, "_uwu_", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 
@@ -204,8 +213,8 @@ TEST_CASE("Grouping character tokenization") {
   Lexer lexer;
   "( )" >> lexer;
   queue<Token> expected;
-  expected.emplace(Token(TokenType::kGrouping, "("));
-  expected.emplace(Token(TokenType::kGrouping, ")"));
+  expected.emplace(TokenType::kGrouping, "(", 1);
+  expected.emplace(TokenType::kGrouping, ")", 1);
   REQUIRE(lexer.tokenize() == expected);
 }
 
@@ -213,10 +222,10 @@ TEST_CASE("Tokenization of mixed token types") {
   Lexer lexer;
   "1 2.0 xyz (" >> lexer;
   queue<Token> expected;
-  expected.emplace(Token(TokenType::kInteger, "1"));
-  expected.emplace(Token(TokenType::kReal, "2.0"));
-  expected.emplace(Token(TokenType::kIdentifier, "xyz"));
-  expected.emplace(Token(TokenType::kGrouping, "("));
+  expected.emplace(TokenType::kInteger, "1", 1);
+  expected.emplace(TokenType::kReal, "2.0", 1);
+  expected.emplace(TokenType::kIdentifier, "xyz", 1);
+  expected.emplace(TokenType::kGrouping, "(", 1);
   REQUIRE(lexer.tokenize() == expected);
 }
 
@@ -225,12 +234,12 @@ TEST_CASE(
   Lexer lexer;
   "(+ 1 2 3)" >> lexer;
   queue<Token> expected;
-  expected.emplace(Token(TokenType::kGrouping, "("));
-  expected.emplace(Token(TokenType::kIdentifier, "+"));
-  expected.emplace(Token(TokenType::kInteger, "1"));
-  expected.emplace(Token(TokenType::kInteger, "2"));
-  expected.emplace(Token(TokenType::kInteger, "3"));
-  expected.emplace(Token(TokenType::kGrouping, ")"));
+  expected.emplace(TokenType::kGrouping, "(", 1);
+  expected.emplace(TokenType::kIdentifier, "+", 1);
+  expected.emplace(TokenType::kInteger, "1", 1);
+  expected.emplace(TokenType::kInteger, "2", 1);
+  expected.emplace(TokenType::kInteger, "3", 1);
+  expected.emplace(TokenType::kGrouping, ")", 1);
   REQUIRE(lexer.tokenize() == expected);
 }
 
