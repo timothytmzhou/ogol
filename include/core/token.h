@@ -15,5 +15,13 @@ public:
   string value;
 };
 
+/*
+ * Equality comparison: two tokens are the same if they have the same value
+ * and token type.
+ */
 bool operator==(const Token &a, const Token &b);
+/*
+ * Inequality comparison: equivalent to !(a == b).
+ */
+bool operator!=(const Token &a, const Token &b);
 } // namespace ogol::core

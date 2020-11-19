@@ -56,7 +56,7 @@ list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES}
         src/visualizer/ogol_app.cc
         )
 
-list(APPEND TEST_FILES tests/test_lexer.cc)
+list(APPEND TEST_FILES tests/test_lexer.cc tests/test_token.cc)
 
 ci_make_app(
         APP_NAME ogol-lang
