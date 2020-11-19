@@ -26,13 +26,17 @@ const string kRealPattern = "[-]?[0-9]*\\.[0-9]+";
 // identifiers should be a chain of symbols (+, -, etc.) or a string of
 // letters, digits, and underscores not starting with a digit
 const string kIdentifierPattern = "[+\\-*/<=>!^|&]+|[a-zA-Z_]\\w*";
+// strings can be either single or double quoted
+const string kStringPattern = "\".*?\"|'.*?'";
 
 // map between regex patterns and token types
 const map<string, TokenType> kTokenPatterns{
     {kIntegerPattern, TokenType::kInteger},
     {kRealPattern, TokenType::kReal},
+    {kStringPattern, TokenType::kString},
     {kIdentifierPattern, TokenType::kIdentifier},
-    {kGroupingPattern, TokenType::kGrouping}};
+    {kGroupingPattern, TokenType::kGrouping}
+};
 
 /**
  * Loads and tokenizes source code into a parsable form. Overloads the <<

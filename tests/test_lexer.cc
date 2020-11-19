@@ -97,6 +97,36 @@ TEST_CASE("Real tokenization") {
     REQUIRE(lexer.tokenize() == expected);
   }
 }
+TEST_CASE("String tokenization") {
+  Lexer lexer;
+  SECTION("Single quoted strings") {
+    "'In Mesoamerica, string was invented some 20,000 to 30,000 years ago'" >>
+        lexer;
+    queue<Token> expected;
+    expected.emplace(Token(TokenType::kString,
+                           "'In Mesoamerica, string was invented some "
+                           "20,000 to 30,000 years ago'"));
+    REQUIRE(lexer.tokenize() == expected);
+  }
+
+  SECTION("Double quoted strings") {
+    R"("In Mesoamerica, string was invented some 20,000 to 30,000 years ago")" >>
+        lexer;
+    queue<Token> expected;
+    expected.emplace(Token(
+        TokenType::kString,
+        R"("In Mesoamerica, string was invented some 20,000 to 30,000 years ago")"));
+    REQUIRE(lexer.tokenize() == expected);
+  }
+
+  SECTION("Individual strings are tokenized individually") {
+    R"("I like strings" "a lot")" >> lexer;
+    queue<Token> expected;
+    expected.emplace(Token(TokenType::kString, "\"I like strings\""));
+    expected.emplace(Token(TokenType::kString, "\"a lot\""));
+    REQUIRE(lexer.tokenize() == expected);
+  }
+}
 
 TEST_CASE("Identifier tokenization") {
   Lexer lexer;
