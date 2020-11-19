@@ -27,12 +27,18 @@ const string kRealPattern = "[-]?[0-9]*\\.[0-9]+";
 // letters, digits, and underscores not starting with a digit
 const string kIdentifierPattern = "[+\\-*/<=>!^|&]+|[a-zA-Z_]\\w*";
 
+// map between regex patterns and token types
 const map<string, TokenType> kTokenPatterns{
     {kIntegerPattern, TokenType::kInteger},
     {kRealPattern, TokenType::kReal},
     {kIdentifierPattern, TokenType::kIdentifier},
     {kGroupingPattern, TokenType::kGrouping}};
 
+/**
+ * Loads and tokenizes source code into a parsable form. Overloads the <<
+ * operator for both iostream and strings for loading in code. Provides a single
+ * public method, tokenize(), which returns a queue of Token objects.
+ */
 class Lexer {
 public:
   /**
