@@ -49,13 +49,14 @@ get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/" ABSOLUTE)
 
 include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 
-list(APPEND CORE_SOURCE_FILES)
+list(APPEND CORE_SOURCE_FILES include/core/exception.h src/core/exception.cc include/core/lexer.h src/core/lexer.cc
+        include/core/token.h src/core/token.cc)
 
 list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES}
         src/visualizer/ogol_app.cc
         )
 
-list(APPEND TEST_FILES)
+list(APPEND TEST_FILES tests/test_lexer.cc)
 
 ci_make_app(
         APP_NAME ogol-lang
