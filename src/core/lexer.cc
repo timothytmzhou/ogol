@@ -64,11 +64,12 @@ string Lexer::check_pattern(const string &source, const string &pattern) {
   }
 }
 
-void Lexer::handle_invalid_token(const string &remaining) {
+void Lexer::handle_invalid_token(const string &remaining) const {
   std::smatch invalid_token;
   std::regex_search(remaining, invalid_token, regex("^\\w+"));
-  throw LexError(boost::str(boost::format("Invalid token at line %i: %s") %
-                            current_line_ % invalid_token.str()));
+  throw LexError(
+      boost::str(boost::format("Invalid token: %s") % invalid_token.str()),
+      current_line_);
 }
 
 std::iostream &operator>>(std::iostream &input, Lexer &lexer) {

@@ -88,7 +88,7 @@ private:
   /**
    * Handles a token which cannot be identified by the lexer.
    */
-  void handle_invalid_token(const string& remaining);
+  void handle_invalid_token(const string& remaining) const;
 };
 
 } // namespace ogol::core
