@@ -92,6 +92,11 @@ public:
    */
   [[nodiscard]] Atom AsAtom() const;
   /**
+   * Unpacks a S-expression comprised only of atoms into a vector of atoms. If
+   * the S-expression is not only made up of atoms, raise an error.
+   */
+  [[nodiscard]] vector<Atom> Unpack() const;
+  /**
    * Gets the left S-expression (first element in vector).
    */
   [[nodiscard]] SExpr GetLeft() const;
@@ -112,7 +117,7 @@ public:
   /**
    * Gets number of elements stored (1 if atomic)
    */
-   size_t size() const;
+  [[nodiscard]] size_t size() const;
 
 private:
   Atom atom_;

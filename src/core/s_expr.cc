@@ -21,12 +21,26 @@ bool SExpr::IsAtomic() const { return is_atomic_; }
 
 bool SExpr::IsNil() const { return !IsAtomic() && s_exprs_.empty(); }
 
-SExpr SExpr::GetLeft() const { return s_exprs_[0]; }
+SExpr SExpr::GetLeft() const {
+  if (IsAtomic()) {
+    throw TypeError("Attempted to split an atomic S-expression.");
+  } else if (IsNil()) {
+    return SExpr();
+  } else {
+    return s_exprs_[0];
+  }
+}
 
 SExpr SExpr::GetRight() const {
-  std::vector<SExpr> right = s_exprs_;
-  right.erase(right.begin());
-  return SExpr(right);
+  if (IsAtomic()) {
+    throw TypeError("Attempted to split an atomic S-expression.");
+  } else if (IsNil()) {
+    return SExpr();
+  } else {
+    std::vector<SExpr> right = s_exprs_;
+    right.erase(right.begin());
+    return SExpr(right);
+  }
 }
 
 SExpr SExpr::Eval(Env &env) const {
@@ -69,6 +83,14 @@ Atom SExpr::AsAtom() const {
   }
 }
 
+vector<Atom> SExpr::Unpack() const {
+  vector<Atom> atoms;
+  for (const SExpr &s_expr : s_exprs_) {
+    atoms.push_back(s_expr.AsAtom());
+  }
+  return atoms;
+}
+
 string SExpr::str() {
   if (IsNil()) {
     return "nil";
@@ -88,6 +110,7 @@ string SExpr::str() {
     return rep;
   }
 }
+
 size_t SExpr::size() const {
   if (IsAtomic()) {
     return 1;
