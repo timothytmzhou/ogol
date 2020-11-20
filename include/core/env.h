@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/s_expr.h>
+#include <core/token.h>
 #include <map>
 #include <memory>
 #include <string>
@@ -11,6 +12,7 @@ using std::map;
 
 namespace ogol::core {
 
+class SExpr;
 /**
  * Stores an environment, a mapping between names and procedures/S-expressions.
  */
@@ -22,6 +24,5 @@ private:
   unique_ptr<Env> parent_;
   map<string, SExpr> names_;
 };
-
 
 } // namespace ogol::core

@@ -72,17 +72,18 @@ void Lexer::handle_invalid_token(const string &remaining) const {
       current_line_);
 }
 
-std::iostream &operator>>(std::iostream &input, Lexer &lexer) {
+std::istream &operator>>(std::istream &input, Lexer &lexer) {
   std::stringstream ss;
   ss << input.rdbuf();
   lexer.source_ = ss.str();
   return input;
 }
+
 string &operator>>(const string &input, Lexer &lexer) {
   lexer.source_ = input;
   return const_cast<string &>(input);
 }
-std::iostream &operator<<(Lexer &lexer, std::iostream &input) {
+std::istream &operator<<(Lexer &lexer, std::istream &input) {
   return input >> lexer;
 }
 string &operator<<(Lexer &lexer, const string &input) { return input >> lexer; }

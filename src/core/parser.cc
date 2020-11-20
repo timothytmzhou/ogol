@@ -20,13 +20,14 @@ SExpr Parser::parse() {
                        token.line_num);
     }
     token = tokens_.front();
-    tokens_.pop();
     if (token.value == "(") {
       parsed.push_back(parse());
-    } else {
+    } else if (token.value != ")"){
       parsed.emplace_back(Atom(token));
+      tokens_.pop();
     }
   }
+  tokens_.pop();
   return SExpr(parsed);
 }
 

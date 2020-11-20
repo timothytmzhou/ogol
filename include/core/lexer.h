@@ -53,7 +53,7 @@ public:
   /**
    * Overloaded input operator which will load in source code to be lexed.
    */
-  friend std::iostream &operator>>(std::iostream &input, Lexer &lexer);
+  friend std::istream &operator>>(std::istream &input, Lexer &lexer);
   /**
     Overloaded input operator which passes in source code as a direct string.
    */
@@ -61,7 +61,7 @@ public:
   /**
    * Equivalent to << with order flipped.
    */
-  friend std::iostream &operator<<(Lexer &lexer, std::iostream &input);
+  friend std::istream &operator<<(Lexer &lexer, std::istream &input);
   /**
    * Equivalent to << with order flipped.
    */

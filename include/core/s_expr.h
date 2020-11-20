@@ -11,6 +11,7 @@ using std::vector;
 namespace ogol::core {
 
 class SExpr;
+class Env;
 // type alias for a procedure (all procedures are SExpr -> SExpr)
 typedef SExpr (*Proc)(SExpr &);
 
@@ -24,7 +25,7 @@ struct Atom {
   Atom(Token token);
   Atom(Proc proc);
   Token token;
-  Proc proc;
+  Proc proc = nullptr;
 };
 
 /**
@@ -47,7 +48,7 @@ public:
    * Constructs an S-expression from a vector of atoms. Equivalent to wrapping
    * each atom in an atomic SExpr and calling SExpr(vector<SExpr>).
    */
-  explicit SExpr(vector<Atom> atoms);
+  explicit SExpr(const vector<Atom>& atoms);
   /**
    * Returns a boolean with whether or not this SExpr is nil (atoms_ is length
    * 0).
@@ -57,7 +58,7 @@ public:
    * Returns a boolean with whether or not this SExpr is an atom (atoms_ is
    * length 1).
    */
-  bool IsAtomic();
+  bool IsAtomic() const;
   /**
    * Returns atom if the S-expression is atomic, otherwise throws error.
    */
@@ -76,10 +77,15 @@ public:
    * and returns the resulting S-expression. Otherwise, returns itself.
    */
   SExpr Eval(Env env);
+  /**
+   * Gets string representation of S-expression.
+   */
+  string str();
 
 private:
   Atom atom_;
   vector<SExpr> s_exprs_;
+  bool is_atomic_;
 };
 
 } // namespace ogol::core
