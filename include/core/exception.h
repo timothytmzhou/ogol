@@ -30,7 +30,7 @@ class LexError : public OgolError {
 /**
  * Exceptions which stem from attempting to access a non-existent name.
  */
-class UndefinedNameError : public OgolError {
+class LookupError : public OgolError {
   using OgolError::OgolError;
 };
 
