@@ -5,6 +5,8 @@
 
 namespace ogol::core {
 
+OgolError::OgolError(string msg) : msg_(std::move(msg)) {}
+
 OgolError::OgolError(const string &msg, size_t line_num)
     : msg_(boost::str(boost::format("Error at line %i. %s") % line_num % msg)),
       line_num_(line_num) {}

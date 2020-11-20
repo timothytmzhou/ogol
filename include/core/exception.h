@@ -11,12 +11,13 @@ namespace ogol::core {
  */
 class OgolError : public exception {
 public:
-  explicit OgolError(const string& msg, size_t line_num);
+  explicit OgolError(string msg);
+  explicit OgolError(const string &msg, size_t line_num);
   [[nodiscard]] const char *what() const noexcept override;
 
 private:
   string msg_;
-  size_t line_num_;
+  size_t line_num_{};
 };
 
 /**
@@ -37,6 +38,20 @@ class UndefinedNameError : public OgolError {
  * Exceptions which stem from failing to parse the input.
  */
 class ParseError : public OgolError {
+  using OgolError::OgolError;
+};
+
+/**
+ * Exceptions which stem from illegal argument to procedures.
+ */
+class ArgumentError : public OgolError {
+  using OgolError::OgolError;
+};
+
+/**
+ * Exceptions which stem from objects of the wrong type being passed.
+ */
+class TypeError : public OgolError {
   using OgolError::OgolError;
 };
 
