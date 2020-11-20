@@ -44,22 +44,31 @@ SExpr SExpr::GetRight() const {
 }
 
 SExpr SExpr::Eval(Env &env) const {
-  if (IsAtomic() || IsNil()) {
-    return *this;
+  if (IsNil()) {
+    return SExpr();
+  } else if (IsAtomic()) {
+    Token self = AsAtom().token;
+    if (self.token_type == TokenType::kIdentifier) {
+      return env[self];
+    } else {
+      return *this;
+    }
   }
   SExpr left = GetLeft();
   SExpr right = GetRight();
-  Token left_token = left.AsAtom().token;
-  if (left.IsAtomic() && left_token.token_type == TokenType::kIdentifier) {
-    SExpr proc = env[left_token];
+  if (left.IsAtomic() &&
+      left.AsAtom().token.token_type == TokenType::kIdentifier) {
+    SExpr proc = left.Eval(env);
     if (proc.IsAtomic() && proc.AsAtom().proc) {
       return proc.AsAtom().proc(right, env);
     } else {
       throw TypeError(proc.str() + "is not callable.");
     }
   } else {
-    return *this;
+    left.Eval(env);
+    right.Eval(env);
   }
+  return *this;
 }
 
 SExpr::SExpr() : is_atomic_(false) {}

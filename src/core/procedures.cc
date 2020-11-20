@@ -7,21 +7,25 @@ namespace ogol::core {
 
 SExpr Print(const SExpr &args, Env &env) {
   if (args.size() == 1) {
-    std::cout << args.GetLeft().Eval(env).str();
-  } else{
+    std::cout << args.GetLeft().Eval(env).str() << "\n";
+  } else {
     throw ArgumentError("print expects one argument.");
   }
   return SExpr();
 }
 
 SExpr Define(const SExpr &args, Env &env) {
-  SExpr left = args.GetLeft().Eval(env);
-  SExpr right = args.GetRight().Eval(env);
+  SExpr left = args.GetLeft();
+  SExpr right = args.GetRight();
+  if (right.size() != 1) {
+    throw DefinitionError("Must assign one value to a name.");
+  }
+  right = right.GetLeft().Eval(env);
   if (!left.IsAtomic() &&
       left.AsAtom().token.token_type == TokenType::kIdentifier) {
     throw DefinitionError("Cannot define value for a non-identifier.");
   }
-  env[left.AsAtom().token] = right;
+  env.SetValue(left.AsAtom().token.value, right);
   return SExpr();
 }
 

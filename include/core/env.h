@@ -21,6 +21,7 @@ class SExpr;
 class Env {
 public:
   Env(shared_ptr<Env> parent_, map<string, SExpr> names);
+  void SetValue(const string& name, SExpr value);
   SExpr &operator[](const Token &identifier_token);
 
 private:
