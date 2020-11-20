@@ -1,14 +1,15 @@
 #pragma once
 
+#include <core/procedures.h>
 #include <core/s_expr.h>
 #include <core/token.h>
 #include <map>
 #include <memory>
 #include <string>
 
-using std::string;
-using std::shared_ptr;
 using std::map;
+using std::shared_ptr;
+using std::string;
 
 namespace ogol::core {
 
@@ -20,7 +21,8 @@ class SExpr;
 class Env {
 public:
   Env(shared_ptr<Env> parent_, map<string, SExpr> names);
-  SExpr & operator[] (const Token& identifier_token);
+  SExpr &operator[](const Token &identifier_token);
+
 private:
   shared_ptr<Env> parent_;
   map<string, SExpr> names_;

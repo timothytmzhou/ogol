@@ -3,6 +3,10 @@
 #include "core/s_expr.h"
 
 namespace ogol::core {
+// forward declarations for needed structures
+class SExpr;
+class Env;
+struct Atom;
 /**
  * Prints out a string to the console.
  */
