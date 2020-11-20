@@ -19,6 +19,10 @@ queue<Token> ogol::core::Lexer::tokenize() {
       string m = check_pattern(remaining, pattern);
       if (!m.empty()) {
         it += m.length();
+        if (token_type == TokenType::kString) {
+          // remove quotations
+          m = m.substr(1, m.size() - 2);
+        }
         tokens.emplace(token_type, m, current_line_);
         found_match = true;
         break;
