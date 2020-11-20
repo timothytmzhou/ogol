@@ -111,8 +111,8 @@ TEST_CASE("String tokenization") {
         lexer;
     queue<Token> expected;
     expected.emplace(TokenType::kString,
-                     "'In Mesoamerica, string was invented some "
-                     "20,000 to 30,000 years ago'",
+                     "In Mesoamerica, string was invented some "
+                     "20,000 to 30,000 years ago",
                      1);
     REQUIRE(lexer.tokenize() == expected);
   }
@@ -123,7 +123,7 @@ TEST_CASE("String tokenization") {
     queue<Token> expected;
     expected.emplace(
         TokenType::kString,
-        R"("In Mesoamerica, string was invented some 20,000 to 30,000 years ago")",
+        "In Mesoamerica, string was invented some 20,000 to 30,000 years ago",
         1);
     REQUIRE(lexer.tokenize() == expected);
   }
@@ -131,8 +131,8 @@ TEST_CASE("String tokenization") {
   SECTION("Individual strings are tokenized individually") {
     R"("I like strings" "a lot")" >> lexer;
     queue<Token> expected;
-    expected.emplace(TokenType::kString, "\"I like strings\"", 1);
-    expected.emplace(TokenType::kString, "\"a lot\"", 1);
+    expected.emplace(TokenType::kString, "I like strings", 1);
+    expected.emplace(TokenType::kString, "a lot", 1);
     REQUIRE(lexer.tokenize() == expected);
   }
 }
