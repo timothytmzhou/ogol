@@ -29,22 +29,22 @@ struct Atom {
 
 /**
  * AS-expression is recursively defined as either an atom, or
- * of form (S1 . S2), where S1 and S2 are both S-Expressions, but here we just
+ * of form (S1 . S2), where S1 and S2 are both S-expressions, but here we just
  * use a vector of SExprs for convenience, and define GetLeft and GetRight to
  * emulate the recursive structure.
  */
 class SExpr {
 public:
   /**
-   * Constructs an atomic S-Expression.
+   * Constructs an atomic S-expression.
    */
   explicit SExpr(Atom atom);
   /**
-   * Constructs a S-Expression from a vector of S-Expressions.
+   * Constructs a S-expression from a vector of S-expressions.
    */
    explicit SExpr(vector<SExpr> s_exprs);
   /**
-   * Constructs an S-Expression from a vector of atoms. Equivalent to wrapping
+   * Constructs an S-expression from a vector of atoms. Equivalent to wrapping
    * each atom in an atomic SExpr and calling SExpr(vector<SExpr>).
    */
   explicit SExpr(vector<Atom> atoms);
@@ -59,21 +59,21 @@ public:
    */
   bool IsAtomic();
   /**
-   * Returns atom if the S-Expression is atomic, otherwise throws error.
+   * Returns atom if the S-expression is atomic, otherwise throws error.
    */
   Atom AsAtom();
   /**
-   * Gets the left S-Expression (first element in vector).
+   * Gets the left S-expression (first element in vector).
    */
   SExpr GetLeft();
   /**
-   * Gets the right S-Expression (every element in the vector except the first,
+   * Gets the right S-expression (every element in the vector except the first,
    * passed into the constructor for a new SExpr).
    */
   SExpr GetRight();
   /**
-   * Evaluates the S-Expression. If it is of form (func x y), evaluates itself
-   * and returns the resulting S-Expression. Otherwise, returns itself.
+   * Evaluates the S-expression. If it is of form (func x y), evaluates itself
+   * and returns the resulting S-expression. Otherwise, returns itself.
    */
   SExpr Eval(Env env);
 

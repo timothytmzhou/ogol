@@ -33,4 +33,11 @@ class UndefinedNameError : public OgolError {
   using OgolError::OgolError;
 };
 
+/**
+ * Exceptions which stem from failing to parse the input.
+ */
+class ParseError : public OgolError {
+  using OgolError::OgolError;
+};
+
 } // namespace ogol::core

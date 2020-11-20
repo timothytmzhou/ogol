@@ -12,7 +12,7 @@ using std::map;
 namespace ogol::core {
 
 /**
- * Stores an environment, a mapping between names and procedures/s-expressions.
+ * Stores an environment, a mapping between names and procedures/S-expressions.
  */
 class Env {
 public:

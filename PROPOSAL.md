@@ -4,7 +4,7 @@ This project will be a clone/derrivative of the [Logo programming language](http
 **The Logo Programming Language**
 In Logo, the turtle can move forward, rotate, and change its pen's color, width, etc. For example, the following Logo code:
 `repeat 4 [forward 50 right 90]`
-will draw a square. Logo is a Lisp with very simple syntax: there is support for console output using `print`, basic arithemtic operations (unlike most Lisps, Logo does not use s-expressions and adopts conventional infix notation),  procedures/functions, conditionals, and so on. Intrestingly, even though the turtle is very limited in its capabilities, stunningly complex figures can be easily created. Abelson even co-wrote a [college-level text](https://mitpress.mit.edu/books/turtle-geometry) on Turtle Geometry, which gives a formal mathematical treatement of turtle graphics. Here is another example, a procedure which draws a spiral:
+will draw a square. Logo is a Lisp with very simple syntax: there is support for console output using `print`, basic arithemtic operations (unlike most Lisps, Logo does not use S-expressions and adopts conventional infix notation),  procedures/functions, conditionals, and so on. Intrestingly, even though the turtle is very limited in its capabilities, stunningly complex figures can be easily created. Abelson even co-wrote a [college-level text](https://mitpress.mit.edu/books/turtle-geometry) on Turtle Geometry, which gives a formal mathematical treatement of turtle graphics. Here is another example, a procedure which draws a spiral:
 ```
 to spiral :size :angle
 if :size > 100 [stop]

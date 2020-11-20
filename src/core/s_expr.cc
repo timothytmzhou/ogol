@@ -9,7 +9,7 @@ Atom::Atom(Proc proc) : proc(proc) {}
 
 bool SExpr::IsAtomic() { return s_exprs_.size() == 1; }
 
-bool SExpr::IsNil() { return !IsAtomic() && s_exprs_.size() == 0; }
+bool SExpr::IsNil() { return !IsAtomic() && s_exprs_.empty(); }
 
 SExpr SExpr::GetLeft() { return s_exprs_[0]; }
 
