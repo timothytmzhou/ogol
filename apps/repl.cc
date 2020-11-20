@@ -19,7 +19,7 @@ int main() {
                                   });
 
   ogol::core::Lexer lexer;
-  "(print 'hello world')" >> lexer;
+  "(print (+ 1 2))" >> lexer;
   std::queue<ogol::core::Token> tokens = lexer.tokenize();
   ogol::core::Parser parser(tokens);
   parser.parse().Eval(main_env);

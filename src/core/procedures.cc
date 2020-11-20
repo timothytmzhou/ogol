@@ -35,13 +35,13 @@ SExpr Add(const SExpr &args, Env &env) {
   if (!left.IsAtomic()) {
     throw ArgumentError("Cannot add non-atomic value.");
   } else {
-    Token left_token = left.AsAtom().token;
-    if (left_token.token_type == TokenType::kInteger) {
-      return Atom(stoi(left_token.value) +
-                  stoi(Add(right, env).AsAtom().token.value));
-    } else if (left_token.token_type == TokenType::kReal) {
-      return Atom(stod(left_token.value) +
-                  stod(Add(right, env).AsAtom().token.value));
+    TokenType left_token_type = left.AsAtom().token.token_type;
+    if (left_token_type == TokenType::kReal ||
+        left_token_type == TokenType::kInteger) {
+      // TODO: Arithmetic always produces reals
+      double remaining =
+          (right.IsNil()) ? 0 : stod(Add(right, env).AsAtom().token.value);
+      return Atom(stod(left.AsAtom().token.value) + remaining);
     } else {
       throw TypeError("Unexpected type passed to add.");
     }
@@ -52,17 +52,17 @@ SExpr Sub(const SExpr &args, Env &env) {
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
   if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot subtract from non-atomic value.");
+    throw ArgumentError("Cannot add non-atomic value.");
   } else {
-    Token left_token = left.AsAtom().token;
-    if (left_token.token_type == TokenType::kInteger) {
-      return Atom(stoi(left_token.value) -
-                  stoi(Add(right, env).AsAtom().token.value));
-    } else if (left_token.token_type == TokenType::kReal) {
-      return Atom(stod(left_token.value) -
-                  stod(Add(right, env).AsAtom().token.value));
+    TokenType left_token_type = left.AsAtom().token.token_type;
+    if (left_token_type == TokenType::kReal ||
+        left_token_type == TokenType::kInteger) {
+      // TODO: Arithmetic always produces reals
+      double remaining =
+          (right.IsNil()) ? 0 : stod(Add(right, env).AsAtom().token.value);
+      return Atom(stod(left.AsAtom().token.value) - remaining);
     } else {
-      throw TypeError("Unexpected type passed to sub.");
+      throw TypeError("Unexpected type passed to add.");
     }
   }
 }
@@ -71,17 +71,17 @@ SExpr Mul(const SExpr &args, Env &env) {
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
   if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot multiply non-atomic value.");
+    throw ArgumentError("Cannot add non-atomic value.");
   } else {
-    Token left_token = left.AsAtom().token;
-    if (left_token.token_type == TokenType::kInteger) {
-      return Atom(stoi(left_token.value) *
-                  stoi(Mul(right, env).AsAtom().token.value));
-    } else if (left_token.token_type == TokenType::kReal) {
-      return Atom(stod(left_token.value) *
-                  stod(Mul(right, env).AsAtom().token.value));
+    TokenType left_token_type = left.AsAtom().token.token_type;
+    if (left_token_type == TokenType::kReal ||
+        left_token_type == TokenType::kInteger) {
+      // TODO: Arithmetic always produces reals
+      double remaining =
+          (right.IsNil()) ? 0 : stod(Mul(right, env).AsAtom().token.value);
+      return Atom(stod(left.AsAtom().token.value) * remaining);
     } else {
-      throw TypeError("Unexpected type passed to mul.");
+      throw TypeError("Unexpected type passed to add.");
     }
   }
 }
@@ -90,17 +90,17 @@ SExpr Div(const SExpr &args, Env &env) {
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
   if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot divide from non-atomic value.");
+    throw ArgumentError("Cannot add non-atomic value.");
   } else {
-    Token left_token = left.AsAtom().token;
-    if (left_token.token_type == TokenType::kInteger) {
-      return Atom(stoi(left_token.value) /
-                  stoi(Mul(right, env).AsAtom().token.value));
-    } else if (left_token.token_type == TokenType::kReal) {
-      return Atom(stod(left_token.value) /
-                  stod(Mul(right, env).AsAtom().token.value));
+    TokenType left_token_type = left.AsAtom().token.token_type;
+    if (left_token_type == TokenType::kReal ||
+        left_token_type == TokenType::kInteger) {
+      // TODO: Arithmetic always produces reals
+      double remaining =
+          (right.IsNil()) ? 0 : stod(Mul(right, env).AsAtom().token.value);
+      return Atom(stod(left.AsAtom().token.value) / remaining);
     } else {
-      throw TypeError("Unexpected type passed to div.");
+      throw TypeError("Unexpected type passed to add.");
     }
   }
 }
