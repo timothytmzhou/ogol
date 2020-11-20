@@ -14,7 +14,7 @@ public:
    * Constructor which takes in a queue of tokens. Should be direct output of
    * lexer.tokenize.
    */
-  Parser(queue<Token> &tokens);
+  explicit Parser(queue<Token> &tokens);
   /**
    * Parses the entire program into a single S-expression.
    */
