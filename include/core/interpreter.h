@@ -45,7 +45,6 @@ private:
    * Helper method which runs source code given a lexer.
    */
   void Run(Lexer lexer);
-  SExpr root_;
 };
 
 } // namespace ogol::core
