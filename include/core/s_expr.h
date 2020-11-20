@@ -23,8 +23,31 @@ typedef SExpr (*Proc)(const SExpr &, Env &);
  */
 struct Atom {
   Atom() = default;
+  /*
+   * Constructor for an Atom from a supplied double value.
+   */
+  explicit Atom(double val);
+  /*
+   * Constructor for an Atom from a supplied integer value.
+   */
+  explicit Atom(int val);
+  /*
+   * Constructor for an Atom from a supplied string value.
+   */
+  explicit Atom(string val);
+  /**
+   * Constructor for an Atom from a supplied token.
+   */
   explicit Atom(Token token);
+  /**
+   * Constructor for an Atom from a supplied procedure.
+   */
   explicit Atom(Proc proc);
+  /**
+   * Allows for cast to SExpr (just calls the SExpr atomic constructor).
+   */
+  explicit operator SExpr();
+
   Token token;
   Proc proc = nullptr;
 };
@@ -48,17 +71,17 @@ public:
   /**
    * Constructs a S-expression from a vector of S-expressions.
    */
-   explicit SExpr(vector<SExpr> s_exprs);
+  explicit SExpr(vector<SExpr> s_exprs);
   /**
    * Constructs an S-expression from a vector of atoms. Equivalent to wrapping
    * each atom in an atomic SExpr and calling SExpr(vector<SExpr>).
    */
-  explicit SExpr(const vector<Atom>& atoms);
+  explicit SExpr(const vector<Atom> &atoms);
   /**
    * Returns a boolean with whether or not this SExpr is nil (atoms_ is length
    * 0).
    */
-  bool IsNil();
+  [[nodiscard]] bool IsNil() const;
   /**
    * Returns a boolean with whether or not this SExpr is an atom (atoms_ is
    * length 1).
@@ -67,21 +90,21 @@ public:
   /**
    * Returns atom if the S-expression is atomic, otherwise throws error.
    */
-  Atom AsAtom();
+  [[nodiscard]] Atom AsAtom() const;
   /**
    * Gets the left S-expression (first element in vector).
    */
-  SExpr GetLeft();
+  [[nodiscard]] SExpr GetLeft() const;
   /**
    * Gets the right S-expression (every element in the vector except the first,
    * passed into the constructor for a new SExpr).
    */
-  SExpr GetRight();
+  [[nodiscard]] SExpr GetRight() const;
   /**
    * Evaluates the S-expression. If it is of form (func x y), evaluates itself
    * and returns the resulting S-expression. Otherwise, returns itself.
    */
-  SExpr Eval(Env env);
+  [[nodiscard]] SExpr Eval(Env &env) const;
   /**
    * Gets string representation of S-expression.
    */

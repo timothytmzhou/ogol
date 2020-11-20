@@ -5,21 +5,30 @@
 namespace ogol::core {
 
 Atom::Atom(Token token) : token(std::move(token)) {}
+
 Atom::Atom(Proc proc) : proc(proc) {}
+
+Atom::Atom(double val) : token(Token(TokenType::kReal, std::to_string(val))) {}
+
+Atom::Atom(int val) : token(Token(TokenType::kInteger, std::to_string(val))) {}
+
+Atom::Atom(string val) : token(Token(TokenType::kString, std::move(val))) {}
+
+Atom::operator SExpr() { return SExpr(*this); }
 
 bool SExpr::IsAtomic() const { return is_atomic_; }
 
-bool SExpr::IsNil() { return !IsAtomic() && s_exprs_.empty(); }
+bool SExpr::IsNil() const { return !IsAtomic() && s_exprs_.empty(); }
 
-SExpr SExpr::GetLeft() { return s_exprs_[0]; }
+SExpr SExpr::GetLeft() const { return s_exprs_[0]; }
 
-SExpr SExpr::GetRight() {
+SExpr SExpr::GetRight() const {
   std::vector<SExpr> right = s_exprs_;
   right.erase(right.begin());
   return SExpr(right);
 }
 
-SExpr SExpr::Eval(Env env) {
+SExpr SExpr::Eval(Env &env) const {
   return SExpr(Atom());
   // TODO: write this
 }
@@ -37,7 +46,7 @@ SExpr::SExpr(const vector<Atom> &atoms) : is_atomic_(false) {
   }
 }
 
-Atom SExpr::AsAtom() {
+Atom SExpr::AsAtom() const {
   if (IsAtomic()) {
     return atom_;
   } else {

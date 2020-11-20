@@ -18,10 +18,11 @@ enum class TokenType { kInteger, kReal, kString, kIdentifier, kGrouping };
 class Token {
 public:
   Token() = default;
+  Token(const TokenType &token_type, string value);
   Token(const TokenType &token_type, string value, size_t line_num);
   TokenType token_type;
   string value;
-  size_t line_num;
+  size_t line_num{};
 };
 
 /**

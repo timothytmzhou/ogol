@@ -7,21 +7,22 @@
 #include <string>
 
 using std::string;
-using std::unique_ptr;
+using std::shared_ptr;
 using std::map;
 
 namespace ogol::core {
 
+// forward declaration since Env and SExpr rely on each other
 class SExpr;
 /**
  * Stores an environment, a mapping between names and procedures/S-expressions.
  */
 class Env {
 public:
-  Env(unique_ptr<Env> parent_, map<string, SExpr> names);
+  Env(shared_ptr<Env> parent_, map<string, SExpr> names);
   SExpr & operator[] (const Token& identifier_token);
 private:
-  unique_ptr<Env> parent_;
+  shared_ptr<Env> parent_;
   map<string, SExpr> names_;
 };
 

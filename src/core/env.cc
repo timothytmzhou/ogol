@@ -5,7 +5,7 @@
 
 namespace ogol::core {
 
-Env::Env(unique_ptr<Env> parent, map<string, SExpr> names)
+Env::Env(shared_ptr<Env> parent, map<string, SExpr> names)
     : parent_(std::move(parent)), names_(std::move(names)) {}
 
 SExpr &Env::operator[](const Token &identifier_token) {
