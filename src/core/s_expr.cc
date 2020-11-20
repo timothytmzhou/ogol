@@ -24,6 +24,8 @@ SExpr SExpr::Eval(Env env) {
   // TODO: write this
 }
 
+SExpr::SExpr() : is_atomic_(false) {}
+
 SExpr::SExpr(Atom atom) : atom_(std::move(atom)), is_atomic_(true) {}
 
 SExpr::SExpr(vector<SExpr> s_exprs)
@@ -45,7 +47,9 @@ Atom SExpr::AsAtom() {
 }
 
 string SExpr::str() {
-  if (IsAtomic()) {
+  if (IsNil()) {
+    return "nil";
+  } else if (IsAtomic()) {
     if (atom_.proc) {
       return "<proc>";
     } else {
@@ -61,4 +65,5 @@ string SExpr::str() {
     return rep;
   }
 }
+
 } // namespace ogol::core

@@ -10,10 +10,11 @@ using std::vector;
 
 namespace ogol::core {
 
+// forward declarations since structures rely on each other
 class SExpr;
 class Env;
 // type alias for a procedure (all procedures are SExpr -> SExpr)
-typedef SExpr (*Proc)(SExpr &);
+typedef SExpr (*Proc)(const SExpr &, Env &);
 
 /**
  * An atom, which wraps a single value. Practically, since we are constrained
@@ -22,8 +23,8 @@ typedef SExpr (*Proc)(SExpr &);
  */
 struct Atom {
   Atom() = default;
-  Atom(Token token);
-  Atom(Proc proc);
+  explicit Atom(Token token);
+  explicit Atom(Proc proc);
   Token token;
   Proc proc = nullptr;
 };
@@ -36,6 +37,10 @@ struct Atom {
  */
 class SExpr {
 public:
+  /**
+   * Constructs a nil SExpr.
+   */
+  SExpr();
   /**
    * Constructs an atomic S-expression.
    */
@@ -58,7 +63,7 @@ public:
    * Returns a boolean with whether or not this SExpr is an atom (atoms_ is
    * length 1).
    */
-  bool IsAtomic() const;
+  [[nodiscard]] bool IsAtomic() const;
   /**
    * Returns atom if the S-expression is atomic, otherwise throws error.
    */
