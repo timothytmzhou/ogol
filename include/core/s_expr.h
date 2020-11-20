@@ -104,7 +104,7 @@ public:
    * Evaluates the S-expression. If it is of form (func x y), evaluates itself
    * and returns the resulting S-expression. Otherwise, returns itself.
    */
-  [[nodiscard]] SExpr Eval(Env &env) const;
+  SExpr Eval(Env &env) const;
   /**
    * Gets string representation of S-expression.
    */
