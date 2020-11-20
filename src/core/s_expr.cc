@@ -88,5 +88,14 @@ string SExpr::str() {
     return rep;
   }
 }
+size_t SExpr::size() const {
+  if (IsAtomic()) {
+    return 1;
+  } else if (IsNil()) {
+    return 0;
+  } else {
+    return s_exprs_.size();
+  }
+}
 
 } // namespace ogol::core

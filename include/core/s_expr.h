@@ -109,6 +109,10 @@ public:
    * Gets string representation of S-expression.
    */
   string str();
+  /**
+   * Gets number of elements stored (1 if atomic)
+   */
+   size_t size() const;
 
 private:
   Atom atom_;

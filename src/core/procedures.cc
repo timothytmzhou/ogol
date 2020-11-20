@@ -6,7 +6,11 @@
 namespace ogol::core {
 
 SExpr Print(const SExpr &args, Env &env) {
-  std::cout << args.Eval(env).str();
+  if (args.size() == 1) {
+    std::cout << args.GetLeft().Eval(env).str();
+  } else{
+    throw ArgumentError("print expects one argument.");
+  }
   return SExpr();
 }
 
