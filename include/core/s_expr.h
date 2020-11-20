@@ -46,7 +46,7 @@ struct Atom {
   /**
    * Allows for cast to SExpr (just calls the SExpr atomic constructor).
    */
-  explicit operator SExpr();
+  operator SExpr() const;
 
   Token token;
   Proc proc = nullptr;

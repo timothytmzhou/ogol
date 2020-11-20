@@ -16,7 +16,7 @@ SExpr &Env::operator[](const Token &identifier_token) {
       throw UndefinedNameError("Could not find ", identifier_token.line_num);
     }
   }
-  return names_.at(identifier_token.value);
+  return names_[identifier_token.value];
 }
 
 } // namespace ogol::core

@@ -14,7 +14,7 @@ Atom::Atom(int val) : token(Token(TokenType::kInteger, std::to_string(val))) {}
 
 Atom::Atom(string val) : token(Token(TokenType::kString, std::move(val))) {}
 
-Atom::operator SExpr() { return SExpr(*this); }
+Atom::operator SExpr() const { return SExpr(*this); }
 
 bool SExpr::IsAtomic() const { return is_atomic_; }
 

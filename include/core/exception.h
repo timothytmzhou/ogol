@@ -55,4 +55,11 @@ class TypeError : public OgolError {
   using OgolError::OgolError;
 };
 
+/**
+ * Exceptions which stem from trying to create an illegal definition.
+ */
+class DefinitionError : public OgolError {
+  using OgolError::OgolError;
+};
+
 } // namespace ogol::core
