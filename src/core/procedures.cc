@@ -1,6 +1,7 @@
 #include "core/procedures.h"
 #include "core/exception.h"
 #include "core/s_expr.h"
+#include <functional>
 #include <iostream>
 
 namespace ogol::core {
@@ -29,79 +30,98 @@ SExpr Define(const SExpr &args, Env &env) {
   return SExpr();
 }
 
+void CheckNumeric(const SExpr &args) {
+  vector<Atom> atoms;
+  if (args.IsNil()) {
+    throw ArgumentError("Expected sequence of numeric atoms, not " +
+                        args.str());
+  }
+  atoms = args.Unpack();
+  if (!std::all_of(atoms.begin(), atoms.end(), [](auto atom) {
+        TokenType type = atom.token.token_type;
+        return type == TokenType::kInteger || type == TokenType::kReal;
+      })) {
+    throw TypeError("Received non-numeric type where one was expected.");
+  }
+}
+
 SExpr Add(const SExpr &args, Env &env) {
+  CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
-  if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot add non-atomic value.");
+  Atom right_val = right.IsNil() ? Atom(0) : Add(right, env).AsAtom();
+  TokenType left_type = left.AsAtom().token.token_type;
+  TokenType right_type = right_val.token.token_type;
+  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().int_value + right_val.int_value);
+  } else if (left_type == TokenType::kInteger &&
+             right_type == TokenType::kReal) {
+    return Atom(left.AsAtom().int_value + right_val.real_value);
+  } else if (left_type == TokenType::kReal &&
+             right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().real_value + right_val.int_value);
   } else {
-    TokenType left_token_type = left.AsAtom().token.token_type;
-    if (left_token_type == TokenType::kReal ||
-        left_token_type == TokenType::kInteger) {
-      // TODO: Arithmetic always produces reals
-      double remaining =
-          (right.IsNil()) ? 0 : stod(Add(right, env).AsAtom().token.value);
-      return Atom(stod(left.AsAtom().token.value) + remaining);
-    } else {
-      throw TypeError("Unexpected type passed to add.");
-    }
+    return Atom(left.AsAtom().real_value + right_val.real_value);
   }
 }
 
 SExpr Sub(const SExpr &args, Env &env) {
+  CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
-  if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot add non-atomic value.");
+  Atom right_val = right.IsNil() ? Atom(0) : Add(right, env).AsAtom();
+  TokenType left_type = left.AsAtom().token.token_type;
+  TokenType right_type = right_val.token.token_type;
+  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().int_value - right_val.int_value);
+  } else if (left_type == TokenType::kInteger &&
+             right_type == TokenType::kReal) {
+    return Atom(left.AsAtom().int_value - right_val.real_value);
+  } else if (left_type == TokenType::kReal &&
+             right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().real_value - right_val.int_value);
   } else {
-    TokenType left_token_type = left.AsAtom().token.token_type;
-    if (left_token_type == TokenType::kReal ||
-        left_token_type == TokenType::kInteger) {
-      // TODO: Arithmetic always produces reals
-      double remaining =
-          (right.IsNil()) ? 0 : stod(Add(right, env).AsAtom().token.value);
-      return Atom(stod(left.AsAtom().token.value) - remaining);
-    } else {
-      throw TypeError("Unexpected type passed to add.");
-    }
+    return Atom(left.AsAtom().real_value - right_val.real_value);
   }
 }
 
 SExpr Mul(const SExpr &args, Env &env) {
+  CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
-  if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot add non-atomic value.");
+  Atom right_val = right.IsNil() ? Atom(1) : Mul(right, env).AsAtom();
+  TokenType left_type = left.AsAtom().token.token_type;
+  TokenType right_type = right_val.token.token_type;
+  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().int_value * right_val.int_value);
+  } else if (left_type == TokenType::kInteger &&
+             right_type == TokenType::kReal) {
+    return Atom(left.AsAtom().int_value * right_val.real_value);
+  } else if (left_type == TokenType::kReal &&
+             right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().real_value * right_val.int_value);
   } else {
-    TokenType left_token_type = left.AsAtom().token.token_type;
-    if (left_token_type == TokenType::kReal ||
-        left_token_type == TokenType::kInteger) {
-      // TODO: Arithmetic always produces reals
-      double remaining =
-          (right.IsNil()) ? 1 : stod(Mul(right, env).AsAtom().token.value);
-      return Atom(stod(left.AsAtom().token.value) * remaining);
-    } else {
-      throw TypeError("Unexpected type passed to add.");
-    }
+    return Atom(left.AsAtom().real_value * right_val.real_value);
   }
 }
 
 SExpr Div(const SExpr &args, Env &env) {
+  CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
-  if (!left.IsAtomic()) {
-    throw ArgumentError("Cannot add non-atomic value.");
+  Atom right_val = right.IsNil() ? Atom(1) : Mul(right, env).AsAtom();
+  TokenType left_type = left.AsAtom().token.token_type;
+  TokenType right_type = right_val.token.token_type;
+  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().int_value / right_val.int_value);
+  } else if (left_type == TokenType::kInteger &&
+             right_type == TokenType::kReal) {
+    return Atom(left.AsAtom().int_value / right_val.real_value);
+  } else if (left_type == TokenType::kReal &&
+             right_type == TokenType::kInteger) {
+    return Atom(left.AsAtom().real_value / right_val.int_value);
   } else {
-    TokenType left_token_type = left.AsAtom().token.token_type;
-    if (left_token_type == TokenType::kReal ||
-        left_token_type == TokenType::kInteger) {
-      // TODO: Arithmetic always produces reals
-      double remaining =
-          (right.IsNil()) ? 1 : stod(Mul(right, env).AsAtom().token.value);
-      return Atom(stod(left.AsAtom().token.value) / remaining);
-    } else {
-      throw TypeError("Unexpected type passed to add.");
-    }
+    return Atom(left.AsAtom().real_value / right_val.real_value);
   }
 }
 

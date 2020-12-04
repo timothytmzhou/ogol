@@ -29,13 +29,13 @@ TEST_CASE("Addition") {
     Lexer lexer("(+ 1 2 3)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "6");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().int_value == Approx(6));
   }
   SECTION("Arguments of mixed numerical type") {
     Lexer lexer("(+ 1 2.0)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "3.0");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().real_value == Approx(3.0));
   }
   SECTION("Arguments of illegal type") {
     Lexer lexer("(+ 1 'a'')");
@@ -57,20 +57,20 @@ TEST_CASE("Subtraction") {
     Lexer lexer("(- 1)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "1");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().int_value == 1);
   }
 
   SECTION("Multiple arguments") {
     Lexer lexer("(- 1 2 3)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "-4");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().int_value == -4);
   }
   SECTION("Arguments of mixed numerical type") {
     Lexer lexer("(- 1 2.0)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "-1.0");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().real_value == -1.0);
   }
   SECTION("Arguments of illegal type") {
     Lexer lexer("(+ 1 'a'')");
@@ -92,20 +92,20 @@ TEST_CASE("Multiplication") {
     Lexer lexer("(* 1)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "1");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().int_value == 1);
   }
 
   SECTION("Multiple arguments") {
     Lexer lexer("(* 1 2 3)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "6");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().int_value == 6);
   }
   SECTION("Arguments of mixed numerical type") {
     Lexer lexer("(* 1 2.0)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(std::stod(parser.parse().Eval(base_env).str()) == Approx(2.0));
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().real_value == Approx(2.0));
   }
   SECTION("Arguments of illegal type") {
     Lexer lexer("(* 1 'a'')");
@@ -127,7 +127,7 @@ TEST_CASE("Division") {
     Lexer lexer("(/ 1)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(parser.parse().Eval(base_env).str() == "1");
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().int_value == 1);
   }
 
   SECTION("Multiple arguments") {
@@ -141,7 +141,7 @@ TEST_CASE("Division") {
     Lexer lexer("(/ 1 2.0)");
     auto tokens = lexer.tokenize();
     Parser parser(tokens);
-    REQUIRE(std::stod(parser.parse().Eval(base_env).str()) == Approx(.5));
+    REQUIRE(parser.parse().Eval(base_env).AsAtom().real_value == Approx(.5));
   }
 
   SECTION("Arguments of illegal type") {
@@ -156,5 +156,7 @@ TEST_CASE("Defined identifier lookup") {
   Lexer lexer("((define x 3) x)");
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
-  REQUIRE(parser.parse().Eval(base_env).str() == "(nil 3)");
+  auto val = parser.parse().Eval(base_env);
+  REQUIRE(val.GetLeft().IsNil());
+  REQUIRE(val.GetRight().GetLeft().AsAtom().int_value == 3);
 }

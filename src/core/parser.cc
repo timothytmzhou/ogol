@@ -23,12 +23,25 @@ SExpr Parser::parse() {
     if (token.value == "(") {
       parsed.push_back(parse());
     } else if (token.value != ")"){
-      parsed.emplace_back(Atom(token));
+      parsed.emplace_back(ParseToken(token));
       tokens_.pop();
     }
   }
   tokens_.pop();
   return SExpr(parsed);
+}
+
+Atom Parser::ParseToken(const Token &token) {
+  switch(token.token_type) {
+  case TokenType::kInteger:
+    return Atom(std::stoi(token.value));
+  case TokenType::kReal:
+    return Atom(std::stod(token.value));
+  case TokenType::kString:
+    return Atom(token.value);
+  default:
+    return Atom(token);
+  }
 }
 
 } // namespace ogol::core
