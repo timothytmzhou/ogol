@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/s_expr.h"
+#include "cinder/gl/gl.h"
 
 namespace ogol::core {
 // forward declarations for needed structures
@@ -35,5 +36,12 @@ SExpr Mul(const SExpr &args, Env* env);
  * Divides the first number in a list by the product of the rest.
  */
 SExpr Div(const SExpr &args, Env* env);
-
+/**
+ * Rotates the turtle.
+ */
+SExpr Rotate(const SExpr &args, Env* env);
+/**
+ * Changes the speed of the turtle.
+ */
+SExpr SetSpeed(const SExpr &args, Env* env);
 } // namespace ogol::core

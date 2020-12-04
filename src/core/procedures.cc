@@ -6,7 +6,7 @@
 
 namespace ogol::core {
 
-SExpr Print(const SExpr &args, Env* env) {
+SExpr Print(const SExpr &args, Env *env) {
   if (args.size() == 1) {
     std::cout << args.GetHead().Eval(env).str() << "\n";
   } else {
@@ -15,7 +15,7 @@ SExpr Print(const SExpr &args, Env* env) {
   return SExpr();
 }
 
-SExpr Define(const SExpr &args, Env* env) {
+SExpr Define(const SExpr &args, Env *env) {
   SExpr head = args.GetHead();
   SExpr tail = args.GetTail();
   if (tail.size() != 1) {
@@ -45,7 +45,7 @@ void CheckNumeric(const SExpr &args) {
   }
 }
 
-SExpr Add(const SExpr &args, Env* env) {
+SExpr Add(const SExpr &args, Env *env) {
   CheckNumeric(args);
   SExpr head = args.GetHead().Eval(env);
   SExpr tail = args.GetTail();
@@ -65,7 +65,7 @@ SExpr Add(const SExpr &args, Env* env) {
   }
 }
 
-SExpr Sub(const SExpr &args, Env* env) {
+SExpr Sub(const SExpr &args, Env *env) {
   CheckNumeric(args);
   SExpr head = args.GetHead().Eval(env);
   SExpr tail = args.GetTail();
@@ -85,7 +85,7 @@ SExpr Sub(const SExpr &args, Env* env) {
   }
 }
 
-SExpr Mul(const SExpr &args, Env* env) {
+SExpr Mul(const SExpr &args, Env *env) {
   CheckNumeric(args);
   SExpr head = args.GetHead().Eval(env);
   SExpr tail = args.GetTail();
@@ -105,7 +105,7 @@ SExpr Mul(const SExpr &args, Env* env) {
   }
 }
 
-SExpr Div(const SExpr &args, Env* env) {
+SExpr Div(const SExpr &args, Env *env) {
   CheckNumeric(args);
   SExpr head = args.GetHead().Eval(env);
   SExpr tail = args.GetTail();
@@ -123,6 +123,36 @@ SExpr Div(const SExpr &args, Env* env) {
   } else {
     return Atom(head.AsAtom().real_value / tail_val.real_value);
   }
+}
+
+SExpr Rotate(const SExpr &args, Env *env) {
+  if (args.size() == 1) {
+    CheckNumeric(args);
+    Atom head = args.GetHead().Eval(env).AsAtom();
+    if (head.token.token_type == TokenType::kInteger) {
+      env->turtle.Rotate(head.int_value);
+    } else {
+      env->turtle.Rotate(head.real_value);
+    }
+  } else {
+    throw ArgumentError("rotate expects one argument.");
+  }
+  return SExpr();
+}
+
+SExpr SetSpeed(const SExpr &args, Env *env) {
+  if (args.size() == 1) {
+    CheckNumeric(args);
+    Atom head = args.GetHead().Eval(env).AsAtom();
+    if (head.token.token_type == TokenType::kInteger) {
+      env->turtle.SetSpeed(head.int_value);
+    } else {
+      env->turtle.SetSpeed(head.real_value);
+    }
+  } else {
+    throw ArgumentError("speed expects one argument.");
+  }
+  return SExpr();
 }
 
 } // namespace ogol::core

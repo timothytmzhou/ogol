@@ -32,12 +32,18 @@ private:
   string source_;
 };
 
-static Env base_env(nullptr, map<string, ogol::core::SExpr>{
-                                 {"print", Atom(ogol::core::Print)},
-                                 {"define", Atom(ogol::core::Define)},
-                                 {"+", Atom(ogol::core::Add)},
-                                 {"-", Atom(ogol::core::Sub)},
-                                 {"*", Atom(ogol::core::Mul)},
-                                 {"/", Atom(ogol::core::Div)},
-                             });
+static Turtle turtle;
+static Env base_env(nullptr,
+                    map<string, ogol::core::SExpr>{
+                        {"print", Atom(ogol::core::Print)},
+                        {"define", Atom(ogol::core::Define)},
+                        {"+", Atom(ogol::core::Add)},
+                        {"-", Atom(ogol::core::Sub)},
+                        {"*", Atom(ogol::core::Mul)},
+                        {"/", Atom(ogol::core::Div)},
+                        {"speed", Atom(ogol::core::SetSpeed)},
+                        {"rotate", Atom(ogol::core::Rotate)},
+                    },
+                    &turtle);
+
 } // namespace ogol::core
