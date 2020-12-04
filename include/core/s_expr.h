@@ -54,7 +54,7 @@ struct Atom {
 /**
  * A S-expression is recursively defined as either an atom, or
  * of form (S1 . S2), where S1 and S2 are both S-expressions, but here we just
- * use a vector of SExprs for convenience, and define GetLeft and GetRight to
+ * use a vector of SExprs for convenience, and define GetHead and GetTail to
  * emulate the recursive structure.
  */
 class SExpr {
@@ -95,14 +95,14 @@ public:
    */
   [[nodiscard]] vector<Atom> Unpack() const;
   /**
-   * Gets the left S-expression (first element in vector).
+   * Gets the head S-expression (first element in vector).
    */
-  [[nodiscard]] SExpr GetLeft() const;
+  [[nodiscard]] SExpr GetHead() const;
   /**
    * Gets the right S-expression (every element in the vector except the first,
    * passed into the constructor for a new SExpr).
    */
-  [[nodiscard]] SExpr GetRight() const;
+  [[nodiscard]] SExpr GetTail() const;
   /**
    * Evaluates the S-expression. If it is of form (func x y), evaluates itself
    * and returns the resulting S-expression. Otherwise, returns itself.

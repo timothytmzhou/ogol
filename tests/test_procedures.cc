@@ -157,6 +157,6 @@ TEST_CASE("Defined identifier lookup") {
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
   auto val = parser.parse().Eval(&base_env);
-  REQUIRE(val.GetLeft().IsNil());
-  REQUIRE(val.GetRight().GetLeft().AsAtom().int_value == 3);
+  REQUIRE(val.GetHead().IsNil());
+  REQUIRE(val.GetTail().GetHead().AsAtom().int_value == 3);
 }

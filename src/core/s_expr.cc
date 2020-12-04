@@ -32,7 +32,7 @@ bool SExpr::IsAtomic() const { return is_atomic_; }
 
 bool SExpr::IsNil() const { return !IsAtomic() && s_exprs_.empty(); }
 
-SExpr SExpr::GetLeft() const {
+SExpr SExpr::GetHead() const {
   if (IsAtomic()) {
     throw TypeError("Attempted to split an atomic S-expression.");
   } else if (IsNil()) {
@@ -42,15 +42,15 @@ SExpr SExpr::GetLeft() const {
   }
 }
 
-SExpr SExpr::GetRight() const {
+SExpr SExpr::GetTail() const {
   if (IsAtomic()) {
     throw TypeError("Attempted to split an atomic S-expression.");
   } else if (IsNil()) {
     return SExpr();
   } else {
-    std::vector<SExpr> right = s_exprs_;
-    right.erase(right.begin());
-    return SExpr(right);
+    std::vector<SExpr> tail = s_exprs_;
+    tail.erase(tail.begin());
+    return SExpr(tail);
   }
 }
 
@@ -67,11 +67,11 @@ SExpr SExpr::Eval(Env* env) const {
       return *this;
     }
     // otherwise check if it is a function call
-  } else if (GetLeft().IsAtomic() &&
-             GetLeft().AsAtom().token.token_type == TokenType::kIdentifier) {
-    SExpr proc = GetLeft().Eval(env);
+  } else if (GetHead().IsAtomic() &&
+             GetHead().AsAtom().token.token_type == TokenType::kIdentifier) {
+    SExpr proc = GetHead().Eval(env);
     if (proc.IsAtomic() && proc.AsAtom().proc) {
-      return proc.AsAtom().proc(GetRight(), env);
+      return proc.AsAtom().proc(GetTail(), env);
     } else {
       throw TypeError(proc.str() + " is not callable.");
     }

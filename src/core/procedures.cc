@@ -8,7 +8,7 @@ namespace ogol::core {
 
 SExpr Print(const SExpr &args, Env* env) {
   if (args.size() == 1) {
-    std::cout << args.GetLeft().Eval(env).str() << "\n";
+    std::cout << args.GetHead().Eval(env).str() << "\n";
   } else {
     throw ArgumentError("print expects one argument.");
   }
@@ -16,17 +16,17 @@ SExpr Print(const SExpr &args, Env* env) {
 }
 
 SExpr Define(const SExpr &args, Env* env) {
-  SExpr left = args.GetLeft();
-  SExpr right = args.GetRight();
-  if (right.size() != 1) {
+  SExpr head = args.GetHead();
+  SExpr tail = args.GetTail();
+  if (tail.size() != 1) {
     throw DefinitionError("Must assign one value to a name.");
   }
-  right = right.GetLeft().Eval(env);
-  if (!left.IsAtomic() &&
-      left.AsAtom().token.token_type == TokenType::kIdentifier) {
+  tail = tail.GetHead().Eval(env);
+  if (!head.IsAtomic() &&
+      head.AsAtom().token.token_type == TokenType::kIdentifier) {
     throw DefinitionError("Cannot define value for a non-identifier.");
   }
-  (*env)[left.AsAtom().token.value] = right;
+  (*env)[head.AsAtom().token.value] = tail;
   return SExpr();
 }
 
@@ -47,81 +47,81 @@ void CheckNumeric(const SExpr &args) {
 
 SExpr Add(const SExpr &args, Env* env) {
   CheckNumeric(args);
-  SExpr left = args.GetLeft().Eval(env);
-  SExpr right = args.GetRight();
-  Atom right_val = right.IsNil() ? Atom(0) : Add(right, env).AsAtom();
-  TokenType left_type = left.AsAtom().token.token_type;
-  TokenType right_type = right_val.token.token_type;
-  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().int_value + right_val.int_value);
-  } else if (left_type == TokenType::kInteger &&
-             right_type == TokenType::kReal) {
-    return Atom(left.AsAtom().int_value + right_val.real_value);
-  } else if (left_type == TokenType::kReal &&
-             right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().real_value + right_val.int_value);
+  SExpr head = args.GetHead().Eval(env);
+  SExpr tail = args.GetTail();
+  Atom tail_val = tail.IsNil() ? Atom(0) : Add(tail, env).AsAtom();
+  TokenType head_type = head.AsAtom().token.token_type;
+  TokenType tail_type = tail_val.token.token_type;
+  if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().int_value + tail_val.int_value);
+  } else if (head_type == TokenType::kInteger &&
+             tail_type == TokenType::kReal) {
+    return Atom(head.AsAtom().int_value + tail_val.real_value);
+  } else if (head_type == TokenType::kReal &&
+             tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().real_value + tail_val.int_value);
   } else {
-    return Atom(left.AsAtom().real_value + right_val.real_value);
+    return Atom(head.AsAtom().real_value + tail_val.real_value);
   }
 }
 
 SExpr Sub(const SExpr &args, Env* env) {
   CheckNumeric(args);
-  SExpr left = args.GetLeft().Eval(env);
-  SExpr right = args.GetRight();
-  Atom right_val = right.IsNil() ? Atom(0) : Add(right, env).AsAtom();
-  TokenType left_type = left.AsAtom().token.token_type;
-  TokenType right_type = right_val.token.token_type;
-  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().int_value - right_val.int_value);
-  } else if (left_type == TokenType::kInteger &&
-             right_type == TokenType::kReal) {
-    return Atom(left.AsAtom().int_value - right_val.real_value);
-  } else if (left_type == TokenType::kReal &&
-             right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().real_value - right_val.int_value);
+  SExpr head = args.GetHead().Eval(env);
+  SExpr tail = args.GetTail();
+  Atom tail_val = tail.IsNil() ? Atom(0) : Add(tail, env).AsAtom();
+  TokenType head_type = head.AsAtom().token.token_type;
+  TokenType tail_type = tail_val.token.token_type;
+  if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().int_value - tail_val.int_value);
+  } else if (head_type == TokenType::kInteger &&
+             tail_type == TokenType::kReal) {
+    return Atom(head.AsAtom().int_value - tail_val.real_value);
+  } else if (head_type == TokenType::kReal &&
+             tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().real_value - tail_val.int_value);
   } else {
-    return Atom(left.AsAtom().real_value - right_val.real_value);
+    return Atom(head.AsAtom().real_value - tail_val.real_value);
   }
 }
 
 SExpr Mul(const SExpr &args, Env* env) {
   CheckNumeric(args);
-  SExpr left = args.GetLeft().Eval(env);
-  SExpr right = args.GetRight();
-  Atom right_val = right.IsNil() ? Atom(1) : Mul(right, env).AsAtom();
-  TokenType left_type = left.AsAtom().token.token_type;
-  TokenType right_type = right_val.token.token_type;
-  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().int_value * right_val.int_value);
-  } else if (left_type == TokenType::kInteger &&
-             right_type == TokenType::kReal) {
-    return Atom(left.AsAtom().int_value * right_val.real_value);
-  } else if (left_type == TokenType::kReal &&
-             right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().real_value * right_val.int_value);
+  SExpr head = args.GetHead().Eval(env);
+  SExpr tail = args.GetTail();
+  Atom tail_val = tail.IsNil() ? Atom(1) : Mul(tail, env).AsAtom();
+  TokenType head_type = head.AsAtom().token.token_type;
+  TokenType tail_type = tail_val.token.token_type;
+  if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().int_value * tail_val.int_value);
+  } else if (head_type == TokenType::kInteger &&
+             tail_type == TokenType::kReal) {
+    return Atom(head.AsAtom().int_value * tail_val.real_value);
+  } else if (head_type == TokenType::kReal &&
+             tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().real_value * tail_val.int_value);
   } else {
-    return Atom(left.AsAtom().real_value * right_val.real_value);
+    return Atom(head.AsAtom().real_value * tail_val.real_value);
   }
 }
 
 SExpr Div(const SExpr &args, Env* env) {
   CheckNumeric(args);
-  SExpr left = args.GetLeft().Eval(env);
-  SExpr right = args.GetRight();
-  Atom right_val = right.IsNil() ? Atom(1) : Mul(right, env).AsAtom();
-  TokenType left_type = left.AsAtom().token.token_type;
-  TokenType right_type = right_val.token.token_type;
-  if (left_type == TokenType::kInteger && right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().int_value / right_val.int_value);
-  } else if (left_type == TokenType::kInteger &&
-             right_type == TokenType::kReal) {
-    return Atom(left.AsAtom().int_value / right_val.real_value);
-  } else if (left_type == TokenType::kReal &&
-             right_type == TokenType::kInteger) {
-    return Atom(left.AsAtom().real_value / right_val.int_value);
+  SExpr head = args.GetHead().Eval(env);
+  SExpr tail = args.GetTail();
+  Atom tail_val = tail.IsNil() ? Atom(1) : Mul(tail, env).AsAtom();
+  TokenType head_type = head.AsAtom().token.token_type;
+  TokenType tail_type = tail_val.token.token_type;
+  if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().int_value / tail_val.int_value);
+  } else if (head_type == TokenType::kInteger &&
+             tail_type == TokenType::kReal) {
+    return Atom(head.AsAtom().int_value / tail_val.real_value);
+  } else if (head_type == TokenType::kReal &&
+             tail_type == TokenType::kInteger) {
+    return Atom(head.AsAtom().real_value / tail_val.int_value);
   } else {
-    return Atom(left.AsAtom().real_value / right_val.real_value);
+    return Atom(head.AsAtom().real_value / tail_val.real_value);
   }
 }
 
