@@ -23,6 +23,14 @@ typedef SExpr (*Proc)(const SExpr &, Env &);
  */
 struct Atom {
   Atom() = default;
+  /**
+   * Constructor for an Atom from a supplied token.
+   */
+  explicit Atom(Token token);
+  /**
+   * Constructor for an Atom from a supplied procedure.
+   */
+  explicit Atom(Proc proc);
   /*
    * Constructor for an Atom from a supplied double value.
    */
@@ -35,25 +43,16 @@ struct Atom {
    * Constructor for an Atom from a supplied string value.
    */
   explicit Atom(string val);
-  /**
-   * Constructor for an Atom from a supplied token.
-   */
-  explicit Atom(Token token);
-  /**
-   * Constructor for an Atom from a supplied procedure.
-   */
-  explicit Atom(Proc proc);
-  /**
-   * Allows for cast to SExpr (just calls the SExpr atomic constructor).
-   */
   operator SExpr() const;
-
   Token token;
+  int int_value;
+  double real_value;
+  string string_value;
   Proc proc = nullptr;
 };
 
 /**
- * AS-expression is recursively defined as either an atom, or
+ * A S-expression is recursively defined as either an atom, or
  * of form (S1 . S2), where S1 and S2 are both S-expressions, but here we just
  * use a vector of SExprs for convenience, and define GetLeft and GetRight to
  * emulate the recursive structure.
@@ -92,8 +91,7 @@ public:
    */
   [[nodiscard]] Atom AsAtom() const;
   /**
-   * Unpacks a S-expression comprised only of atoms into a vector of atoms. If
-   * the S-expression is not only made up of atoms, raise an error.
+   * Unpacks the S-expression into a vector of atoms.
    */
   [[nodiscard]] vector<Atom> Unpack() const;
   /**
@@ -113,7 +111,7 @@ public:
   /**
    * Gets string representation of S-expression.
    */
-  string str();
+  string str() const;
   /**
    * Gets number of elements stored (1 if atomic)
    */

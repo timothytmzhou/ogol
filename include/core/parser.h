@@ -21,6 +21,7 @@ public:
   SExpr parse();
 
 private:
+  static Atom ParseToken(const Token& token);
   queue<Token> tokens_;
 };
 
