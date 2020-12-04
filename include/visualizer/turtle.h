@@ -5,6 +5,7 @@
 using ci::Color;
 using glm::dvec2;
 using glm::ivec2;
+using std::string;
 
 namespace ogol::visualizer {
 
@@ -44,6 +45,10 @@ public:
    * Sets the speed of the turtle.
    */
   void SetSpeed(double speed);
+  /**
+   * Gets a string representation of the turtle.
+   */
+  string str() const;
 
 private:
   dvec2 position_{0, 0};

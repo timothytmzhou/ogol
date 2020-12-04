@@ -1,4 +1,7 @@
 #include "visualizer/turtle.h"
+#include <sstream>
+
+using std::stringstream;
 
 namespace ogol::visualizer {
 
@@ -25,5 +28,13 @@ void Turtle::Rotate(double theta) {
 void Turtle::SetColor(const ci::Color &color) { color_ = color; }
 
 void Turtle::SetSpeed(double speed) { speed_ = speed; }
+string Turtle::str() const {
+  stringstream ss;
+  ss << "Turtle position: " << position_ << "\n";
+  ss << "Facing: " << forward_ << "\n";
+  ss << "Speed: " << speed_ << "\n";
+  ss << "Color: " << color_ << "\n";
+  return ss.str();
+}
 
 } // namespace ogol::visualizer

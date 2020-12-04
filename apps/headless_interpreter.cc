@@ -1,17 +1,14 @@
 #include "core/interpreter.h"
 #include <iostream>
-#include <fstream>
 
-using std::ifstream;
-using ogol::core::Interpreter;
 using ogol::core::base_env;
+using ogol::core::Interpreter;
+using std::ifstream;
 
 int main() {
   Interpreter interpreter;
   ifstream source("/home/timothy/Documents/main.ogl");
-  while (true) {
-    source >> interpreter;
-    std::cout << base_env.turtle.str();
-    interpreter.Run();
-  }
+  source >> interpreter;
+  std::cout << base_env.turtle.str();
+  interpreter.Run();
 }
