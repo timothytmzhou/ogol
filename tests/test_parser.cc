@@ -11,8 +11,7 @@ using ogol::core::Parser;
 using ogol::core::SExpr;
 
 TEST_CASE("Program is not an accepted S-expression form") {
-  Lexer lexer;
-  "print 1" >> lexer; // this should be '(print 1)'--all programs should be a
+  Lexer lexer("print 1"); // this should be '(print 1)'--all programs should be a
                       // list form S-expression
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
@@ -20,25 +19,22 @@ TEST_CASE("Program is not an accepted S-expression form") {
 }
 
 TEST_CASE("Unbalanced parenthetical") {
-  Lexer lexer;
-  "(print 1 ()" >> lexer;
+  Lexer lexer("(print 1 ()");
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
   REQUIRE_THROWS_AS(parser.parse(), ParseError);
 }
 
 TEST_CASE("Nested S-expressions") {
-  Lexer lexer;
-  "((print 1) (print 2))" >> lexer;
+  Lexer lexer("((print 1) (print 2))");
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
   REQUIRE(parser.parse().str() == "((print 1) (print 2))");
 }
 
 TEST_CASE("Atoms are parsed correctly") {
-  Lexer lexer;
-  "(1 1.0 'a')" >> lexer;
+  Lexer lexer("(1 1.0 'a')");
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
-  REQUIRE(parser.parse().str() == "(1 1.0 'a')");
+  REQUIRE(parser.parse().str() == "(1 1.0 \"a\")");
 }

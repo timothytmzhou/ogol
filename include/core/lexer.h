@@ -45,6 +45,10 @@ const map<string, TokenType> kTokenPatterns{
 class Lexer {
 public:
   /**
+   * Constructor for a lexer which takes in source as a string.
+   */
+  Lexer(string source);
+  /**
    * Performs lexical analysis on source to split it into easily parsed Token
    * objects.
    */
@@ -55,17 +59,9 @@ public:
    */
   friend std::istream &operator>>(std::istream &input, Lexer &lexer);
   /**
-    Overloaded input operator which passes in source code as a direct string.
-   */
-  friend string &operator>>(const string &input, Lexer &lexer);
-  /**
    * Equivalent to << with order flipped.
    */
   friend std::istream &operator<<(Lexer &lexer, std::istream &input);
-  /**
-   * Equivalent to << with order flipped.
-   */
-  friend string &operator<<(Lexer &lexer, const string &input);
 
 private:
   string source_;
@@ -88,7 +84,7 @@ private:
   /**
    * Handles a token which cannot be identified by the lexer.
    */
-  void handle_invalid_token(const string& remaining) const;
+  void handle_invalid_token(const string &remaining) const;
 };
 
 } // namespace ogol::core

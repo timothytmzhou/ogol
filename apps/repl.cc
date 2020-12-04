@@ -1,5 +1,4 @@
 #include "core/interpreter.h"
-#include <fstream>
 #include <iostream>
 
 using ogol::core::Interpreter;
@@ -7,8 +6,9 @@ using ogol::core::Interpreter;
 int main() {
   Interpreter interpreter;
   while (true) {
-    string source;
-    std::getline(std::cin, source);
-    source >> interpreter;
+    string input;
+    getline(std::cin, input);
+    std::stringstream(input) >> interpreter;
+    interpreter.Run();
   }
 }
