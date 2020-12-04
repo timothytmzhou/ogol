@@ -52,14 +52,14 @@ include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 list(APPEND CORE_SOURCE_FILES include/core/exception.h src/core/exception.cc include/core/lexer.h src/core/lexer.cc
         include/core/token.h src/core/token.cc include/core/s_expr.h src/core/s_expr.cc include/core/env.h
         src/core/env.cc include/core/parser.h src/core/parser.cc include/core/procedures.h src/core/procedures.cc
-        include/core/interpreter.h src/core/interpreter.cc)
+        include/core/interpreter.h src/core/interpreter.cc include/visualizer/turtle.h src/visualizer/turtle.cc)
 
 list(APPEND SOURCE_FILES ${CORE_SOURCE_FILES}
         src/visualizer/ogol_app.cc
         )
 
 list(APPEND TEST_FILES tests/test_lexer.cc tests/test_token.cc tests/test_parser.cc
-        tests/test_procedures.cc)
+        tests/test_procedures.cc tests/test_turtle.cc)
 
 ci_make_app(
         APP_NAME ogol-lang-app
