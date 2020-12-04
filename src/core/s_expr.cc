@@ -107,7 +107,13 @@ string SExpr::str() {
     if (atom_.proc) {
       return "<proc>";
     } else {
-      return atom_.token.value;
+      auto token = atom_.token;
+      if (token.token_type == TokenType::kString) {
+        // format string
+        return "\"" + token.value + "\"";
+      } else {
+        return token.value;
+      }
     }
   } else {
     string rep = "(";
