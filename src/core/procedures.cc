@@ -6,7 +6,7 @@
 
 namespace ogol::core {
 
-SExpr Print(const SExpr &args, Env &env) {
+SExpr Print(const SExpr &args, Env* env) {
   if (args.size() == 1) {
     std::cout << args.GetLeft().Eval(env).str() << "\n";
   } else {
@@ -15,7 +15,7 @@ SExpr Print(const SExpr &args, Env &env) {
   return SExpr();
 }
 
-SExpr Define(const SExpr &args, Env &env) {
+SExpr Define(const SExpr &args, Env* env) {
   SExpr left = args.GetLeft();
   SExpr right = args.GetRight();
   if (right.size() != 1) {
@@ -26,7 +26,7 @@ SExpr Define(const SExpr &args, Env &env) {
       left.AsAtom().token.token_type == TokenType::kIdentifier) {
     throw DefinitionError("Cannot define value for a non-identifier.");
   }
-  env[left.AsAtom().token.value] = right;
+  (*env)[left.AsAtom().token.value] = right;
   return SExpr();
 }
 
@@ -45,7 +45,7 @@ void CheckNumeric(const SExpr &args) {
   }
 }
 
-SExpr Add(const SExpr &args, Env &env) {
+SExpr Add(const SExpr &args, Env* env) {
   CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
@@ -65,7 +65,7 @@ SExpr Add(const SExpr &args, Env &env) {
   }
 }
 
-SExpr Sub(const SExpr &args, Env &env) {
+SExpr Sub(const SExpr &args, Env* env) {
   CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
@@ -85,7 +85,7 @@ SExpr Sub(const SExpr &args, Env &env) {
   }
 }
 
-SExpr Mul(const SExpr &args, Env &env) {
+SExpr Mul(const SExpr &args, Env* env) {
   CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();
@@ -105,7 +105,7 @@ SExpr Mul(const SExpr &args, Env &env) {
   }
 }
 
-SExpr Div(const SExpr &args, Env &env) {
+SExpr Div(const SExpr &args, Env* env) {
   CheckNumeric(args);
   SExpr left = args.GetLeft().Eval(env);
   SExpr right = args.GetRight();

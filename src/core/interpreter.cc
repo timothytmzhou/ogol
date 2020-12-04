@@ -25,7 +25,7 @@ void Interpreter::Run() {
   Lexer lexer(source_);
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
-  parser.parse().Eval(base_env);
+  parser.parse().Eval(&base_env);
 }
 
 } // namespace ogol::core

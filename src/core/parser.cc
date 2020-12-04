@@ -3,7 +3,7 @@
 
 namespace ogol::core {
 
-Parser::Parser(queue<Token> &tokens) : tokens_(tokens) {}
+Parser::Parser(queue<Token> tokens) : tokens_(tokens) {}
 
 SExpr Parser::parse() {
   vector<SExpr> parsed;
