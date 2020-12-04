@@ -8,19 +8,24 @@ namespace ogol::core {
 Env::Env(shared_ptr<Env> parent, map<string, SExpr> names)
     : parent_(std::move(parent)), names_(std::move(names)) {}
 
-SExpr &Env::operator[](const Token &identifier_token) {
-  if (names_.find(identifier_token.value) == names_.end()) {
-    if (parent_) {
-      return (*parent_)[identifier_token];
-    } else {
-      throw LookupError("Could not find symbol " + identifier_token.value + ".",
-                        identifier_token.line_num);
+SExpr &Env::operator[](const string &name) {
+  if (!Contains(name)) {
+    // if the supplied name has not been defined in this container, but has
+    // been defined in an outer scope, return the value corresponding to that
+    // name
+    auto parent = parent_;
+    while (parent) {
+      if (parent->Contains(name)) {
+        return parent->names_[name];
+      }
+      parent = parent->parent_;
     }
   }
-  return names_[identifier_token.value];
+  return names_[name];
 }
-void Env::SetValue(const string& name, SExpr value) {
-  names_[name] = std::move(value);
+
+bool Env::Contains(const string &name) {
+  return names_.find(name) == names_.end();
 }
 
 } // namespace ogol::core

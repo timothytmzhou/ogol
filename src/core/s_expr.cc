@@ -49,7 +49,7 @@ SExpr SExpr::Eval(Env &env) const {
   } else if (IsAtomic()) {
     Token self = AsAtom().token;
     if (self.token_type == TokenType::kIdentifier) {
-      return env[self];
+      return env[self.value];
     } else {
       return *this;
     }

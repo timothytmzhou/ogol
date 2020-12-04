@@ -25,7 +25,7 @@ SExpr Define(const SExpr &args, Env &env) {
       left.AsAtom().token.token_type == TokenType::kIdentifier) {
     throw DefinitionError("Cannot define value for a non-identifier.");
   }
-  env.SetValue(left.AsAtom().token.value, right);
+  env[left.AsAtom().token.value] = right;
   return SExpr();
 }
 
@@ -78,7 +78,7 @@ SExpr Mul(const SExpr &args, Env &env) {
         left_token_type == TokenType::kInteger) {
       // TODO: Arithmetic always produces reals
       double remaining =
-          (right.IsNil()) ? 0 : stod(Mul(right, env).AsAtom().token.value);
+          (right.IsNil()) ? 1 : stod(Mul(right, env).AsAtom().token.value);
       return Atom(stod(left.AsAtom().token.value) * remaining);
     } else {
       throw TypeError("Unexpected type passed to add.");
@@ -97,7 +97,7 @@ SExpr Div(const SExpr &args, Env &env) {
         left_token_type == TokenType::kInteger) {
       // TODO: Arithmetic always produces reals
       double remaining =
-          (right.IsNil()) ? 0 : stod(Mul(right, env).AsAtom().token.value);
+          (right.IsNil()) ? 1 : stod(Mul(right, env).AsAtom().token.value);
       return Atom(stod(left.AsAtom().token.value) / remaining);
     } else {
       throw TypeError("Unexpected type passed to add.");
