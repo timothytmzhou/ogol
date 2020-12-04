@@ -83,6 +83,13 @@ ci_make_app(
         INCLUDES include
 )
 
+ci_make_app(
+        APP_NAME ogol-headless
+        CINDER_PATH ${CINDER_PATH}
+        SOURCES apps/headless_interpreter.cc ${SOURCE_FILES}
+        INCLUDES include
+)
+
 if (MSVC)
     set_property(TARGET ogol-lang-test APPEND_STRING PROPERTY LINK_FLAGS " /SUBSYSTEM:CONSOLE")
 endif ()
