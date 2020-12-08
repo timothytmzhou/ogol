@@ -2,8 +2,11 @@
 #include <core/exception.h>
 #include <core/lexer.h>
 #include <regex>
+#include <utility>
 
 namespace ogol::core {
+
+Lexer::Lexer(string source) : source_(std::move(source)) {}
 
 queue<Token> ogol::core::Lexer::tokenize() {
   queue<Token> tokens;
@@ -75,21 +78,5 @@ void Lexer::handle_invalid_token(const string &remaining) const {
       boost::str(boost::format("Invalid token: %s") % invalid_token.str()),
       current_line_);
 }
-
-std::istream &operator>>(std::istream &input, Lexer &lexer) {
-  std::stringstream ss;
-  ss << input.rdbuf();
-  lexer.source_ = ss.str();
-  return input;
-}
-
-string &operator>>(const string &input, Lexer &lexer) {
-  lexer.source_ = input;
-  return const_cast<string &>(input);
-}
-std::istream &operator<<(Lexer &lexer, std::istream &input) {
-  return input >> lexer;
-}
-string &operator<<(Lexer &lexer, const string &input) { return input >> lexer; }
 
 } // namespace ogol::core

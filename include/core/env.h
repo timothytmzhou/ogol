@@ -6,7 +6,9 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <visualizer/turtle.h>
 
+using ogol::visualizer::Turtle;
 using std::map;
 using std::shared_ptr;
 using std::string;
@@ -20,11 +22,26 @@ class SExpr;
  */
 class Env {
 public:
-  Env(shared_ptr<Env> parent_, map<string, SExpr> names);
-  void SetValue(const string& name, SExpr value);
-  SExpr &operator[](const Token &identifier_token);
+  /**
+   * Constructor which takes in a pointer to an outer environment and an
+   * initial mapping of names to S-Expressions.
+   */
+  Env(shared_ptr<Env> parent_, map<string, SExpr> names, Turtle *turtle);
+  /**
+   * Overloaded [] operator -- if the name is not defined in this environment
+   * but is defined in an outer environment, returns reference to that
+   * environment's names_[name] map element, otherwise return's this one's
+   * names_[name] map element.
+   */
+  SExpr &operator[](const string &name);
+  Turtle turtle;
 
 private:
+  /**
+   * Helper method to check if a name is in this environment (only checks inner
+   * scope).
+   */
+  bool Contains(const string &name);
   shared_ptr<Env> parent_;
   map<string, SExpr> names_;
 };

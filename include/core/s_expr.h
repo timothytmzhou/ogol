@@ -14,7 +14,7 @@ namespace ogol::core {
 class SExpr;
 class Env;
 // type alias for a procedure (all procedures are SExpr -> SExpr)
-typedef SExpr (*Proc)(const SExpr &, Env &);
+typedef SExpr (*Proc)(const SExpr &, Env*);
 
 /**
  * An atom, which wraps a single value. Practically, since we are constrained
@@ -23,6 +23,14 @@ typedef SExpr (*Proc)(const SExpr &, Env &);
  */
 struct Atom {
   Atom() = default;
+  /**
+   * Constructor for an Atom from a supplied token.
+   */
+  explicit Atom(Token token);
+  /**
+   * Constructor for an Atom from a supplied procedure.
+   */
+  explicit Atom(Proc proc);
   /*
    * Constructor for an Atom from a supplied double value.
    */
@@ -35,27 +43,18 @@ struct Atom {
    * Constructor for an Atom from a supplied string value.
    */
   explicit Atom(string val);
-  /**
-   * Constructor for an Atom from a supplied token.
-   */
-  explicit Atom(Token token);
-  /**
-   * Constructor for an Atom from a supplied procedure.
-   */
-  explicit Atom(Proc proc);
-  /**
-   * Allows for cast to SExpr (just calls the SExpr atomic constructor).
-   */
   operator SExpr() const;
-
   Token token;
+  int int_value;
+  double real_value;
+  string string_value;
   Proc proc = nullptr;
 };
 
 /**
- * AS-expression is recursively defined as either an atom, or
+ * A S-expression is recursively defined as either an atom, or
  * of form (S1 . S2), where S1 and S2 are both S-expressions, but here we just
- * use a vector of SExprs for convenience, and define GetLeft and GetRight to
+ * use a vector of SExprs for convenience, and define GetHead and GetTail to
  * emulate the recursive structure.
  */
 class SExpr {
@@ -92,28 +91,27 @@ public:
    */
   [[nodiscard]] Atom AsAtom() const;
   /**
-   * Unpacks a S-expression comprised only of atoms into a vector of atoms. If
-   * the S-expression is not only made up of atoms, raise an error.
+   * Unpacks the S-expression into a vector of atoms.
    */
   [[nodiscard]] vector<Atom> Unpack() const;
   /**
-   * Gets the left S-expression (first element in vector).
+   * Gets the head S-expression (first element in vector).
    */
-  [[nodiscard]] SExpr GetLeft() const;
+  [[nodiscard]] SExpr GetHead() const;
   /**
    * Gets the right S-expression (every element in the vector except the first,
    * passed into the constructor for a new SExpr).
    */
-  [[nodiscard]] SExpr GetRight() const;
+  [[nodiscard]] SExpr GetTail() const;
   /**
    * Evaluates the S-expression. If it is of form (func x y), evaluates itself
    * and returns the resulting S-expression. Otherwise, returns itself.
    */
-  SExpr Eval(Env &env) const;
+  SExpr Eval(Env* env) const;
   /**
    * Gets string representation of S-expression.
    */
-  string str();
+  [[nodiscard]] string str() const;
   /**
    * Gets number of elements stored (1 if atomic)
    */

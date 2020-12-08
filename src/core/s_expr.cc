@@ -5,15 +5,26 @@
 
 namespace ogol::core {
 
-Atom::Atom(Token token) : token(std::move(token)) {}
+Atom::Atom(Token token) : token(std::move(token)) {
+  if (token.token_type == TokenType::kInteger) {
+    int_value = std::stoi(token.value);
+  } else if (token.token_type == TokenType::kReal) {
+    real_value = std::stod(token.value);
+  } else if (token.token_type == TokenType::kString) {
+    string_value = token.value;
+  }
+}
 
 Atom::Atom(Proc proc) : proc(proc) {}
 
-Atom::Atom(double val) : token(Token(TokenType::kReal, std::to_string(val))) {}
+Atom::Atom(double val)
+    : token(Token(TokenType::kReal, std::to_string(val))), real_value(val) {}
 
-Atom::Atom(int val) : token(Token(TokenType::kInteger, std::to_string(val))) {}
+Atom::Atom(int val)
+    : token(Token(TokenType::kInteger, std::to_string(val))), int_value(val) {}
 
-Atom::Atom(string val) : token(Token(TokenType::kString, std::move(val))) {}
+Atom::Atom(string val)
+    : token(Token(TokenType::kString, std::move(val))), string_value(val) {}
 
 Atom::operator SExpr() const { return SExpr(*this); }
 
@@ -21,7 +32,7 @@ bool SExpr::IsAtomic() const { return is_atomic_; }
 
 bool SExpr::IsNil() const { return !IsAtomic() && s_exprs_.empty(); }
 
-SExpr SExpr::GetLeft() const {
+SExpr SExpr::GetHead() const {
   if (IsAtomic()) {
     throw TypeError("Attempted to split an atomic S-expression.");
   } else if (IsNil()) {
@@ -31,44 +42,47 @@ SExpr SExpr::GetLeft() const {
   }
 }
 
-SExpr SExpr::GetRight() const {
+SExpr SExpr::GetTail() const {
   if (IsAtomic()) {
     throw TypeError("Attempted to split an atomic S-expression.");
   } else if (IsNil()) {
     return SExpr();
   } else {
-    std::vector<SExpr> right = s_exprs_;
-    right.erase(right.begin());
-    return SExpr(right);
+    std::vector<SExpr> tail = s_exprs_;
+    tail.erase(tail.begin());
+    return SExpr(tail);
   }
 }
 
-SExpr SExpr::Eval(Env &env) const {
+SExpr SExpr::Eval(Env* env) const {
+  // if the S-expression is nil, return nil
   if (IsNil()) {
     return SExpr();
+    // if it is an atom, returns its value
   } else if (IsAtomic()) {
     Token self = AsAtom().token;
     if (self.token_type == TokenType::kIdentifier) {
-      return env[self];
+      return (*env)[self.value];
     } else {
       return *this;
     }
-  }
-  SExpr left = GetLeft();
-  SExpr right = GetRight();
-  if (left.IsAtomic() &&
-      left.AsAtom().token.token_type == TokenType::kIdentifier) {
-    SExpr proc = left.Eval(env);
+    // otherwise check if it is a function call
+  } else if (GetHead().IsAtomic() &&
+             GetHead().AsAtom().token.token_type == TokenType::kIdentifier) {
+    SExpr proc = GetHead().Eval(env);
     if (proc.IsAtomic() && proc.AsAtom().proc) {
-      return proc.AsAtom().proc(right, env);
+      return proc.AsAtom().proc(GetTail(), env);
     } else {
-      throw TypeError(proc.str() + "is not callable.");
+      throw TypeError(proc.str() + " is not callable.");
     }
+    // otherwise evaluate all individual elements of the S-expression
   } else {
-    left.Eval(env);
-    right.Eval(env);
+    vector<SExpr> s_exprs;
+    for (const SExpr &s_expr : s_exprs_) {
+      s_exprs.push_back(s_expr.Eval(env));
+    }
+    return SExpr(s_exprs);
   }
-  return *this;
 }
 
 SExpr::SExpr() : is_atomic_(false) {}
@@ -100,14 +114,20 @@ vector<Atom> SExpr::Unpack() const {
   return atoms;
 }
 
-string SExpr::str() {
+string SExpr::str() const {
   if (IsNil()) {
     return "nil";
   } else if (IsAtomic()) {
     if (atom_.proc) {
       return "<proc>";
     } else {
-      return atom_.token.value;
+      auto token = atom_.token;
+      if (token.token_type == TokenType::kString) {
+        // format string
+        return "\"" + token.value + "\"";
+      } else {
+        return token.value;
+      }
     }
   } else {
     string rep = "(";
