@@ -1,10 +1,10 @@
-#include <visualizer/ideal_gas_app.h>
+#include <visualizer/ogol_app.h>
 
 void prepareSettings(
-    ideal_gas::visualizer::IdealGasRenderer::Settings* settings) {
+    ogol::visualizer::GraphicsRenderer::Settings* settings) {
   settings->setResizable(false);
 }
 
 // This line is a macro that expands into an "int main()" function.
-CINDER_APP(ideal_gas::visualizer::IdealGasRenderer, ci::app::RendererGl,
+CINDER_APP(ogol::visualizer::GraphicsRenderer, ci::app::RendererGl,
            prepareSettings)

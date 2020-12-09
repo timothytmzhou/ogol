@@ -8,6 +8,8 @@ using ogol::core::Parser;
 
 namespace ogol::core {
 
+Interpreter::Interpreter(Turtle *turtle) : env_(nullptr, kBuiltIns, turtle) {}
+
 std::istream &operator>>(std::istream &input,
                          ogol::core::Interpreter &interpreter) {
   std::stringstream ss;
@@ -25,7 +27,11 @@ void Interpreter::Run() {
   Lexer lexer(source_);
   auto tokens = lexer.tokenize();
   Parser parser(tokens);
-  parser.parse().Eval(&base_env);
+  parser.parse().Eval(&env_);
+}
+
+Turtle Interpreter::GetTurtle() const {
+  return env_.turtle;
 }
 
 } // namespace ogol::core
