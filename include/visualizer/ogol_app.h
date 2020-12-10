@@ -43,6 +43,7 @@ private:
   // controller
   Button run_button_;
   string kScriptsDir = "/home/timothy/documents/";
+  vector<string> kExtensions = {".ogl"};
 
   void SetStates(const vector<TurtleState> &states);
   void RenderGraphics();

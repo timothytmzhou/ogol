@@ -55,7 +55,7 @@ ivec2 GraphicsRenderer::ToScreenSpace(const ivec2 &coord) const {
 }
 
 string GraphicsRenderer::GetPath() const {
-  ci::fs::path path = ci::app::getOpenFilePath(kScriptsDir, {"ogl"});
+  ci::fs::path path = ci::app::getOpenFilePath(kScriptsDir, kExtensions);
   return path.string();
 }
 
