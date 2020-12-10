@@ -29,8 +29,7 @@ public:
   vector<TurtleState> Run();
 
 private:
-  // TODO: remove hardcoded path
-  string path_ = "/home/timothy/documents/main.ogl";
+  string path_;
   Turtle turtle_;
   Interpreter interpreter_;
 };

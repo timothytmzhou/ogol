@@ -27,7 +27,7 @@ public:
    * called when clicked.
    */
   Button(const ivec2 &pos, size_t width, size_t height, const Color &color,
-         const Color &text_color, ci::Font text_font, string text,
+         const Color &outline_color, ci::Font text_font, string text,
          function<void(void)> action);
   void Draw();
   void HandleMouseDown(ci::app::MouseEvent event);
@@ -37,7 +37,7 @@ private:
   const size_t width_;
   const size_t height_;
   const Color color_;
-  const Color text_color_;
+  const Color outline_color_;
   const ci::Font text_font_;
   const string text_;
   const Rectf r_;
