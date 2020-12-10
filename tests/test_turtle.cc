@@ -12,20 +12,20 @@ TEST_CASE("Position of turtle is updated correctly") {
     Turtle turtle({0, 0}, // position
                   {0, 1}, // orientation
                   2,      // speed
+                  1,      // turn speed
                   10,     // max x
                   10      // max y
     );
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {0, 2}));
   }
   SECTION("Speed is negative") {
     Turtle turtle({0, 0}, // position
                   {0, 1}, // orientation
                   -2,     // speed
+                  1,      // turn speed
                   10,     // max x
                   10      // max y
     );
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {0, -2}));
   }
 }
@@ -35,40 +35,40 @@ TEST_CASE("Turtle tries to go out of bounds") {
     Turtle turtle({0, 10}, // position
                   {0, 1},  // orientation
                   1,       // speed
+                  1,      // turn speed
                   10,      // max x
                   10       // max y
     );
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {0, 10}));
   }
   SECTION("Turtle at bottom of screen") {
     Turtle turtle({0, -10}, // position
                   {0, -1},  // orientation
                   1,        // speed
+                  1,      // turn speed
                   10,       // max x
                   10        // max y
     );
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {0, -10}));
   }
   SECTION("Turtle at right side of screen") {
     Turtle turtle({10, 0}, // position
                   {1, 0},  // orientation
                   1,       // speed
+                  1,      // turn speed
                   10,      // max x
                   10       // max y
     );
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {10, 0}));
   }
   SECTION("Turtle at left side of screen") {
     Turtle turtle({-10, 0}, // position
                   {-1, 0},  // orientation
                   1,        // speed
+                  1,      // turn speed
                   10,       // max x
                   10        // max y
     );
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {-10, 0}));
   }
 }
@@ -78,22 +78,22 @@ TEST_CASE("Turtle rotation") {
     Turtle turtle({0, 0}, // position
                   {0, 1}, // orientation
                   1,      // speed
+                  1,      // turn speed
                   10,     // max x
                   10      // max y
     );
     turtle.Rotate(90);
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {-1, 0}));
   }
   SECTION("Negative number of degrees") {
     Turtle turtle({0, 0}, // position
                   {0, 1}, // orientation
-                  1,     // speed
+                  1,      // speed
+                  1,      // turn speed
                   10,     // max x
                   10      // max y
     );
     turtle.Rotate(-90);
-    turtle.Update();
     REQUIRE(vect_compare(turtle.GetPosition(), {1, 0}));
   }
 }

@@ -31,6 +31,10 @@ public:
   void Clear();
   [[nodiscard]] vector<TurtleState> GetPath() const;
   /**
+   * Gets the position of the turtle.
+   */
+   ivec2 GetPosition() const;
+  /**
    * Move the turtle forward by x pixels.
    */
   void Forward(size_t x);
