@@ -30,7 +30,7 @@ public:
 
 private:
   // TODO: remove hardcoded path
-  string path_ = "/home/timothy/Documents/main.ogl";
+  string path_ = "/home/timothy/documents/main.ogl";
   Turtle turtle_;
   Interpreter interpreter_;
 };

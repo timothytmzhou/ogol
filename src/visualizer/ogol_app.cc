@@ -1,22 +1,30 @@
-#include "cinder/gl/gl.h"
-//#include "cinder/cairo/Cairo.h"
-
 #include "visualizer/ogol_app.h"
+#include "cinder/gl/gl.h"
 
 namespace ogol::visualizer {
 
-ogol::visualizer::GraphicsRenderer::GraphicsRenderer() {
+ogol::visualizer::GraphicsRenderer::GraphicsRenderer()
+    : run_button_(ivec2{kWindowWidth / 2, kTopBarHeight / 2}, kRunButtonWidth,
+                  kTopBarHeight, kButtonColor, kTextColor,
+                  ci::Font("Roboto", 20), "run", [this]() {
+                    model_.Run();
+                  }) {
   ci::app::setWindowSize(kWindowWidth, kWindowHeight);
 }
 
+void GraphicsRenderer::setup() {
+
+}
+
 void GraphicsRenderer::draw() {
-//  prev_ = turtle_.GetPosition();
-//  turtle_.Update();
-//  current_ = turtle_.GetPosition();
-//  // code derived from
-//  // https://github.com/cinder/Cinder/blob/master/samples/CairoBasic/src/CairoBasicApp.cpp
-//  cairo::Context ctx(cairo::createWindowSurface());
-//  renderScene(ctx);
+  ci::gl::clear(Color("white"));
+  run_button_.Draw();
+
+
+}
+
+void GraphicsRenderer::mouseDown(ci::app::MouseEvent event) {
+  run_button_.HandleMouseDown(event);
 }
 
 } // namespace ogol::visualizer

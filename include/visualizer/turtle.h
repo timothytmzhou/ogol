@@ -6,6 +6,7 @@ using ci::Color;
 using glm::dvec2;
 using glm::ivec2;
 using std::string;
+using std::vector;
 
 namespace ogol::visualizer {
 
@@ -13,7 +14,7 @@ namespace ogol::visualizer {
  * Class to represent a turtle object, a cursor with orientation and a speed.
  */
 class Turtle {
-public:
+ public:
   Turtle() = default;
   /**
    * Constructor which initializes turtle with given position, orientation and
@@ -21,6 +22,8 @@ public:
    */
   Turtle(const dvec2 &position, const dvec2 &forward, double speed,
          size_t max_x, size_t max_y);
+  void Clear();
+  vector<ivec2> GetPath() const;
   /**
    * Gets the (discrete) position of the turtle.
    */
@@ -50,8 +53,10 @@ public:
    */
   string str() const;
 
-private:
+ private:
   dvec2 position_{0, 0};
+  // stores the points the turtle has been to
+  vector<ivec2> traversed;
   // unit vector representing the turtle's forward direction
   dvec2 forward_{0, 1};
   double speed_ = 1;

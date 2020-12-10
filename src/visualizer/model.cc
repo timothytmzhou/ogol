@@ -7,16 +7,13 @@ namespace ogol::visualizer {
 
 void visualizer::Model::SetFile(const string &path) { path_ = path; }
 
-void Model::Clear() {
-  turtle_.clear();
-}
+void Model::Clear() { turtle_.Clear(); }
 
 vector<ivec2> Model::Run() {
-  ifstream source("/home/timothy/Documents/main.ogl");
+  ifstream source(path_);
   source >> interpreter_;
   interpreter_.Run(&turtle_);
   return turtle_.GetPath();
 }
-
 
 } // namespace ogol::visualizer

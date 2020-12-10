@@ -37,4 +37,9 @@ string Turtle::str() const {
   return ss.str();
 }
 
+void Turtle::Clear() {
+  *this = Turtle();
+}
+vector<ivec2> Turtle::GetPath() const { return traversed; }
+
 } // namespace ogol::visualizer
