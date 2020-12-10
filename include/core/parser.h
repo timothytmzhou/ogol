@@ -1,8 +1,9 @@
 #pragma once
 
-#include "core/s_expr.h"
-#include "queue"
-#include "token.h"
+#include <queue>
+
+#include <core/s_expr.h>
+#include <core/token.h>
 
 using std::queue;
 

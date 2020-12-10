@@ -1,14 +1,14 @@
 #pragma once
 
-#include "cinder/app/App.h"
-#include "cinder/app/RendererGl.h"
-#include "cinder/gl/gl.h"
+#include <cinder/app/App.h>
+#include <cinder/app/RendererGl.h>
+#include <cinder/gl/gl.h>
 
-#include "core/interpreter.h"
+#include <core/interpreter.h>
 
-#include "visualizer/button.h"
-#include "visualizer/model.h"
-#include "visualizer/turtle.h"
+#include <visualizer/button.h>
+#include <visualizer/model.h>
+#include <visualizer/turtle.h>
 
 using ci::Color;
 using std::string;
@@ -43,12 +43,24 @@ private:
   // controller
   Button run_button_;
   string kScriptsDir = "/home/timothy/documents/";
-  vector<string> kExtensions = {".ogl"};
+  vector<string> kExtensions = {"ogl"};
 
+  /**
+   * Adds TurtleStates to be drawn to the screen.
+   */
   void SetStates(const vector<TurtleState> &states);
+  /**
+   * Renders the computed TurtleStates to the screen.
+   */
   void RenderGraphics();
+  /**
+   * Converts from the vector space of the turtle to screen space.
+   */
   ivec2 ToScreenSpace(const ivec2 &coord) const;
 
+  /**
+   * Opens a file dialogue, returns absolute path.
+   */
   string GetPath() const;
 };
 

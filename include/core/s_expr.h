@@ -35,15 +35,15 @@ struct Atom {
    * Constructor for an Atom from a supplied procedure.
    */
   explicit Atom(Proc proc);
-  /*
+  /**
    * Constructor for an Atom from a supplied double value.
    */
   explicit Atom(double val);
-  /*
+  /**
    * Constructor for an Atom from a supplied integer value.
    */
   explicit Atom(int val);
-  /*
+  /**
    * Constructor for an Atom from a supplied string value.
    */
   explicit Atom(const string &val);

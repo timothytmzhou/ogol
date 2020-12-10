@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cinder/gl/gl.h"
+#include <cinder/gl/gl.h>
 
 using ci::Color;
 using glm::dvec2;
@@ -8,13 +8,15 @@ using glm::ivec2;
 using std::string;
 using std::vector;
 
+namespace ogol::visualizer {
+/**
+ * Struct to hold a position, rotation, and color of a turtle.
+ */
 struct TurtleState {
   ivec2 position;
   double rotation;
   Color color = "black";
 };
-
-namespace ogol::visualizer {
 
 /**
  * Class to represent a turtle object, a cursor with orientation and a speed.
@@ -33,7 +35,7 @@ public:
   /**
    * Gets the position of the turtle.
    */
-   ivec2 GetPosition() const;
+  ivec2 GetPosition() const;
   /**
    * Move the turtle forward by x pixels.
    */
@@ -53,7 +55,7 @@ public:
   /**
    * Gets a string representation of the turtle.
    */
-  string str() const;
+  [[nodiscard]] string str() const;
 
 private:
   double speed_ = 5;

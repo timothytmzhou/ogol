@@ -2,6 +2,7 @@
 
 #include <string>
 #include <utility>
+
 using std::string;
 
 namespace ogol::core {

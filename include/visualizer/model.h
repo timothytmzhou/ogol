@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cinder/gl/gl.h"
+#include <cinder/gl/gl.h>
 #include <core/interpreter.h>
 
 using std::function;
@@ -13,6 +13,9 @@ using ogol::core::Interpreter;
 
 namespace ogol::visualizer {
 
+/**
+ * Class which manages and runs selected source files.
+ */
 class Model {
 public:
   /**

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "cinder/gl/gl.h"
-#include "core/s_expr.h"
-#include "visualizer/turtle.h"
+#include <cinder/gl/gl.h>
+
+#include <core/s_expr.h>
+#include <visualizer/turtle.h>
 
 using ogol::visualizer::Turtle;
 
