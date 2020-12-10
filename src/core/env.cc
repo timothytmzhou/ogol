@@ -5,8 +5,8 @@
 
 namespace ogol::core {
 
-Env::Env(shared_ptr<Env> parent, map<string, SExpr> names, Turtle *turtle)
-    : turtle(*turtle), parent_(std::move(parent)), names_(std::move(names)) {}
+Env::Env(shared_ptr<Env> parent, map<string, SExpr> names)
+    : parent_(std::move(parent)), names_(std::move(names)) {}
 
 SExpr &Env::operator[](const string &name) {
   if (!Contains(name)) {

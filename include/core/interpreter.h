@@ -41,6 +41,7 @@ public:
 private:
   string source_;
   Env env_;
+  Turtle turtle_;
 };
 
 static const map<string, SExpr> kBuiltIns{
