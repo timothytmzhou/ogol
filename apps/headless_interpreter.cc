@@ -6,9 +6,9 @@ using std::ifstream;
 
 int main() {
   Turtle turtle;
-  Interpreter interpreter(&turtle);
+  Interpreter interpreter;
   ifstream source("/home/timothy/Documents/main.ogl");
   source >> interpreter;
-  std::cout << interpreter.GetTurtle().str();
-  interpreter.Run();
+  std::cout << turtle.str();
+  interpreter.Run(&turtle);
 }
