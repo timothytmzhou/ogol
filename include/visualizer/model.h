@@ -26,7 +26,7 @@ public:
   /**
    * Runs the current file, returns a vector of points the turtle visited.
    */
-  vector<ivec2> Run();
+  vector<TurtleState> Run();
 
 private:
   // TODO: remove hardcoded path

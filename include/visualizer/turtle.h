@@ -8,61 +8,61 @@ using glm::ivec2;
 using std::string;
 using std::vector;
 
+struct TurtleState {
+  ivec2 position;
+  double rotation;
+  Color color = "black";
+};
+
 namespace ogol::visualizer {
 
 /**
  * Class to represent a turtle object, a cursor with orientation and a speed.
  */
 class Turtle {
- public:
+public:
   Turtle() = default;
   /**
    * Constructor which initializes turtle with given position, orientation and
    * speed.
    */
   Turtle(const dvec2 &position, const dvec2 &forward, double speed,
-         size_t max_x, size_t max_y);
+         double turn_speed, size_t max_x, size_t max_y);
   void Clear();
-  vector<ivec2> GetPath() const;
+  vector<TurtleState> GetPath() const;
   /**
-   * Gets the (discrete) position of the turtle.
+   * Move the turtle forward by x pixels.
    */
-  ivec2 GetPosition();
-  /**
-   * Gets the color of the turtle.
-   */
-  ci::Color GetColor();
-  /**
-   * Updates the position of the turtle based on its orientation.
-   */
-  void Update();
+  void Forward(size_t x);
   /**
    * Rotates the turtle by theta degrees.
    */
   void Rotate(double theta);
   /**
-   * Sets the color of the turtle.
-   */
-  void SetColor(const ci::Color &color);
-  /**
    * Sets the speed of the turtle.
    */
   void SetSpeed(double speed);
+  /**
+   * Sets the color of the turtle.
+   */
+  void SetColor(const ci::Color &color);
+
   /**
    * Gets a string representation of the turtle.
    */
   string str() const;
 
- private:
-  dvec2 position_{0, 0};
-  // stores the points the turtle has been to
-  vector<ivec2> traversed;
-  // unit vector representing the turtle's forward direction
-  dvec2 forward_{0, 1};
-  double speed_ = 1;
+private:
+  double speed_ = 5;
+  double turn_speed_ = 30;
   size_t max_x_;
   size_t max_y_;
-  ci::Color color_ = "black";
+  // the turtle's current state
+  TurtleState state_;
+  // stores past TurtleStates
+  vector<TurtleState> path_;
+
+  void PushState();
 };
 
 } // namespace ogol::visualizer

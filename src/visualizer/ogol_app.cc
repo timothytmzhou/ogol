@@ -19,8 +19,6 @@ void GraphicsRenderer::setup() {
 void GraphicsRenderer::draw() {
   ci::gl::clear(Color("white"));
   run_button_.Draw();
-
-
 }
 
 void GraphicsRenderer::mouseDown(ci::app::MouseEvent event) {
