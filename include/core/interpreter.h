@@ -49,6 +49,7 @@ static const map<string, SExpr> kBuiltIns{
     {"forward", Atom(ogol::core::Forward)},
     {"speed", Atom(ogol::core::SetSpeed)},
     {"rotate", Atom(ogol::core::Rotate)},
+    {"color", Atom(ogol::core::SetColor)},
 };
 
 } // namespace ogol::core

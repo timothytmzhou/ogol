@@ -46,7 +46,7 @@ struct Atom {
   /*
    * Constructor for an Atom from a supplied string value.
    */
-  explicit Atom(string val);
+  explicit Atom(const string &val);
   operator SExpr() const;
   Token token;
   int int_value;

@@ -23,8 +23,8 @@ Atom::Atom(double val)
 Atom::Atom(int val)
     : token(Token(TokenType::kInteger, std::to_string(val))), int_value(val) {}
 
-Atom::Atom(string val)
-    : token(Token(TokenType::kString, std::move(val))), string_value(val) {}
+Atom::Atom(const string &val)
+    : token(Token(TokenType::kString, val)), string_value(val) {}
 
 Atom::operator SExpr() const { return SExpr(*this); }
 

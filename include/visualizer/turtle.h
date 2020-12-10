@@ -29,7 +29,7 @@ public:
   Turtle(const dvec2 &position, const dvec2 &forward, double speed,
          double turn_speed, size_t max_x, size_t max_y);
   void Clear();
-  vector<TurtleState> GetPath() const;
+  [[nodiscard]] vector<TurtleState> GetPath() const;
   /**
    * Move the turtle forward by x pixels.
    */
@@ -45,8 +45,7 @@ public:
   /**
    * Sets the color of the turtle.
    */
-  void SetColor(const ci::Color &color);
-
+  void SetColor(const Color &color);
   /**
    * Gets a string representation of the turtle.
    */

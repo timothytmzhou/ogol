@@ -170,4 +170,29 @@ SExpr SetSpeed(const SExpr &args, Env *env, Turtle *turtle) {
   return SExpr();
 }
 
+static map<string, Color> colors = {
+    {"red", Color("red")},       {"blue", Color("blue")},
+    {"green", Color("green")},   {"black", Color("black")},
+    {"brown", Color("brown")},   {"white", Color("white")},
+    {"yellow", Color("yellow")}, {"orange", Color("orange")},
+    {"pink", Color("pink")},     {"purple", Color("purple")},
+};
+
+SExpr SetColor(const SExpr &args, Env *env, Turtle *turtle) {
+  if (args.size() == 1) {
+    Atom head = args.GetHead().Eval(env, turtle).AsAtom();
+    if (head.token.token_type == TokenType::kString) {
+      if (colors.find(head.string_value) == colors.end()) {
+        throw ArgumentError("Unrecognized color.");
+      }
+      turtle->SetColor(colors[head.string_value]);
+    } else {
+      throw ArgumentError("Colors should be passed in as strings.");
+    }
+  } else {
+    throw ArgumentError("color expects one argument.");
+  }
+  return SExpr();
+}
+
 } // namespace ogol::core

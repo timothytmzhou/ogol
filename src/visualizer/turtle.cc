@@ -1,6 +1,8 @@
 #include "visualizer/turtle.h"
 #include <sstream>
+
 using std::stringstream;
+using std::map;
 
 namespace ogol::visualizer {
 
@@ -57,6 +59,8 @@ string Turtle::str() const {
   return ss.str();
 }
 
-void Turtle::SetColor(const ci::Color &color) { state_.color = color; }
+void Turtle::SetColor(const Color &color) {
+  state_.color = color;
+}
 
 } // namespace ogol::visualizer

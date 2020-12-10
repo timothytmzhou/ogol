@@ -51,4 +51,8 @@ SExpr Forward(const SExpr &args, Env *env, Turtle *turtle);
  * Changes the speed of the turtle.
  */
 SExpr SetSpeed(const SExpr &args, Env *env, Turtle *turtle);
+/**
+ * Changes the color of the turtle.
+ */
+SExpr SetColor(const SExpr &args, Env *env, Turtle *turtle);
 } // namespace ogol::core
