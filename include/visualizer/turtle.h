@@ -55,8 +55,8 @@ public:
 private:
   double speed_ = 5;
   double turn_speed_ = 30;
-  size_t max_x_;
-  size_t max_y_;
+  size_t max_x_ = 500;
+  size_t max_y_ = 500;
   // the turtle's current state
   TurtleState state_;
   // stores past TurtleStates

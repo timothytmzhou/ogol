@@ -44,6 +44,10 @@ SExpr Div(const SExpr &args, Env *env, Turtle *turtle);
  */
 SExpr Rotate(const SExpr &args, Env *env, Turtle *turtle);
 /**
+ * Moves the turtle forward.
+ */
+SExpr Forward(const SExpr &args, Env *env, Turtle *turtle);
+/**
  * Changes the speed of the turtle.
  */
 SExpr SetSpeed(const SExpr &args, Env *env, Turtle *turtle);

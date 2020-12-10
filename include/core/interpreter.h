@@ -32,7 +32,7 @@ public:
   /**
    * Helper method which runs source code given a lexer.
    */
-  void Run(Turtle* turtle);
+  void Run(Turtle *turtle);
 
 private:
   string source_;
@@ -40,10 +40,15 @@ private:
 };
 
 static const map<string, SExpr> kBuiltIns{
-    {"print", Atom(ogol::core::Print)},    {"define", Atom(ogol::core::Define)},
-    {"+", Atom(ogol::core::Add)},          {"-", Atom(ogol::core::Sub)},
-    {"*", Atom(ogol::core::Mul)},          {"/", Atom(ogol::core::Div)},
-    {"speed", Atom(ogol::core::SetSpeed)}, {"rotate", Atom(ogol::core::Rotate)},
+    {"print", Atom(ogol::core::Print)},
+    {"define", Atom(ogol::core::Define)},
+    {"+", Atom(ogol::core::Add)},
+    {"-", Atom(ogol::core::Sub)},
+    {"*", Atom(ogol::core::Mul)},
+    {"/", Atom(ogol::core::Div)},
+    {"forward", Atom(ogol::core::Forward)},
+    {"speed", Atom(ogol::core::SetSpeed)},
+    {"rotate", Atom(ogol::core::Rotate)},
 };
 
 } // namespace ogol::core

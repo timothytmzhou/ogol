@@ -20,7 +20,7 @@ void Turtle::Forward(size_t x) {
   // north is 0 degrees in our coordinate system
   double theta = glm::radians(state_.rotation + 90);
   dvec2 step_velocity =
-      (double)x / num_steps * ci::dvec2{glm::cos(theta), glm::sin(theta)};
+      ((double)x / num_steps) * ci::dvec2{glm::cos(theta), glm::sin(theta)};
   for (size_t i = 0; i < num_steps; ++i) {
     state_.position += step_velocity;
     // clamp position within range
@@ -47,6 +47,7 @@ void Turtle::Rotate(double theta) {
 }
 
 void Turtle::SetSpeed(double speed) { speed_ = speed; }
+
 string Turtle::str() const {
   stringstream ss;
   ss << "Turtle position: " << state_.position << "\n";

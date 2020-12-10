@@ -125,6 +125,21 @@ SExpr Div(const SExpr &args, Env *env, Turtle *turtle) {
   }
 }
 
+SExpr Forward(const SExpr &args, Env *env, Turtle *turtle) {
+  if (args.size() == 1) {
+    CheckNumeric(args);
+    Atom head = args.GetHead().Eval(env, turtle).AsAtom();
+    if (head.token.token_type == TokenType::kInteger) {
+      turtle->Forward(head.int_value);
+    } else {
+      turtle->Forward(head.real_value);
+    }
+  } else {
+    throw ArgumentError("forward expects one argument.");
+  }
+  return SExpr();
+}
+
 SExpr Rotate(const SExpr &args, Env *env, Turtle *turtle) {
   if (args.size() == 1) {
     CheckNumeric(args);
@@ -147,7 +162,7 @@ SExpr SetSpeed(const SExpr &args, Env *env, Turtle *turtle) {
     if (head.token.token_type == TokenType::kInteger) {
       turtle->SetSpeed(head.int_value);
     } else {
-     turtle->SetSpeed(head.real_value);
+      turtle->SetSpeed(head.real_value);
     }
   } else {
     throw ArgumentError("speed expects one argument.");
