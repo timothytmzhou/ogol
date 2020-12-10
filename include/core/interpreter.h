@@ -18,7 +18,7 @@ public:
    * Constructor which will create an interpreter that will mutate the supplied
    * turtle.
    */
-  explicit Interpreter(Turtle *turtle);
+  explicit Interpreter();
   /**
    * Overloaded input operator which will load and execute source.
    */
@@ -32,16 +32,11 @@ public:
   /**
    * Helper method which runs source code given a lexer.
    */
-  void Run();
-  /**
-   * Gets the turtle object this interpreter is attached to.
-   */
-  [[nodiscard]] Turtle GetTurtle() const;
+  void Run(Turtle* turtle);
 
 private:
   string source_;
   Env env_;
-  Turtle turtle_;
 };
 
 static const map<string, SExpr> kBuiltIns{
