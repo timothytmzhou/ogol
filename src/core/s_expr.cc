@@ -23,8 +23,8 @@ Atom::Atom(double val)
 Atom::Atom(int val)
     : token(Token(TokenType::kInteger, std::to_string(val))), int_value(val) {}
 
-Atom::Atom(string val)
-    : token(Token(TokenType::kString, std::move(val))), string_value(val) {}
+Atom::Atom(const string &val)
+    : token(Token(TokenType::kString, val)), string_value(val) {}
 
 Atom::operator SExpr() const { return SExpr(*this); }
 
@@ -54,7 +54,7 @@ SExpr SExpr::GetTail() const {
   }
 }
 
-SExpr SExpr::Eval(Env* env) const {
+SExpr SExpr::Eval(Env *env, Turtle *turtle) const {
   // if the S-expression is nil, return nil
   if (IsNil()) {
     return SExpr();
@@ -69,9 +69,9 @@ SExpr SExpr::Eval(Env* env) const {
     // otherwise check if it is a function call
   } else if (GetHead().IsAtomic() &&
              GetHead().AsAtom().token.token_type == TokenType::kIdentifier) {
-    SExpr proc = GetHead().Eval(env);
+    SExpr proc = GetHead().Eval(env, turtle);
     if (proc.IsAtomic() && proc.AsAtom().proc) {
-      return proc.AsAtom().proc(GetTail(), env);
+      return proc.AsAtom().proc(GetTail(), env, turtle);
     } else {
       throw TypeError(proc.str() + " is not callable.");
     }
@@ -79,7 +79,7 @@ SExpr SExpr::Eval(Env* env) const {
   } else {
     vector<SExpr> s_exprs;
     for (const SExpr &s_expr : s_exprs_) {
-      s_exprs.push_back(s_expr.Eval(env));
+      s_exprs.push_back(s_expr.Eval(env, turtle));
     }
     return SExpr(s_exprs);
   }

@@ -4,6 +4,8 @@
 #include <core/lexer.h>
 #include <core/parser.h>
 
+using ogol::core::SExpr;
+
 namespace ogol::core {
 
 /**
@@ -12,6 +14,11 @@ namespace ogol::core {
  */
 class Interpreter {
 public:
+  /**
+   * Constructor which will create an interpreter that will mutate the supplied
+   * turtle.
+   */
+  explicit Interpreter();
   /**
    * Overloaded input operator which will load and execute source.
    */
@@ -22,28 +29,27 @@ public:
    */
   friend std::istream &operator<<(Interpreter &interpreter,
                                   std::istream &input);
-
   /**
    * Helper method which runs source code given a lexer.
    */
-  void Run();
+  void Run(Turtle *turtle);
 
 private:
   string source_;
+  Env env_;
 };
 
-static Turtle turtle;
-static Env base_env(nullptr,
-                    map<string, ogol::core::SExpr>{
-                        {"print", Atom(ogol::core::Print)},
-                        {"define", Atom(ogol::core::Define)},
-                        {"+", Atom(ogol::core::Add)},
-                        {"-", Atom(ogol::core::Sub)},
-                        {"*", Atom(ogol::core::Mul)},
-                        {"/", Atom(ogol::core::Div)},
-                        {"speed", Atom(ogol::core::SetSpeed)},
-                        {"rotate", Atom(ogol::core::Rotate)},
-                    },
-                    &turtle);
+static const map<string, SExpr> kBuiltIns{
+    {"print", Atom(ogol::core::Print)},
+    {"define", Atom(ogol::core::Define)},
+    {"+", Atom(ogol::core::Add)},
+    {"-", Atom(ogol::core::Sub)},
+    {"*", Atom(ogol::core::Mul)},
+    {"/", Atom(ogol::core::Div)},
+    {"forward", Atom(ogol::core::Forward)},
+    {"speed", Atom(ogol::core::SetSpeed)},
+    {"rotate", Atom(ogol::core::Rotate)},
+    {"color", Atom(ogol::core::SetColor)},
+};
 
 } // namespace ogol::core

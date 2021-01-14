@@ -5,8 +5,12 @@
 #include <string>
 #include <vector>
 
+#include <visualizer/turtle.h>
+
 using std::string;
 using std::vector;
+
+using ogol::visualizer::Turtle;
 
 namespace ogol::core {
 
@@ -14,7 +18,7 @@ namespace ogol::core {
 class SExpr;
 class Env;
 // type alias for a procedure (all procedures are SExpr -> SExpr)
-typedef SExpr (*Proc)(const SExpr &, Env*);
+typedef SExpr (*Proc)(const SExpr &, Env *, Turtle *turtle);
 
 /**
  * An atom, which wraps a single value. Practically, since we are constrained
@@ -31,18 +35,18 @@ struct Atom {
    * Constructor for an Atom from a supplied procedure.
    */
   explicit Atom(Proc proc);
-  /*
+  /**
    * Constructor for an Atom from a supplied double value.
    */
   explicit Atom(double val);
-  /*
+  /**
    * Constructor for an Atom from a supplied integer value.
    */
   explicit Atom(int val);
-  /*
+  /**
    * Constructor for an Atom from a supplied string value.
    */
-  explicit Atom(string val);
+  explicit Atom(const string &val);
   operator SExpr() const;
   Token token;
   int int_value;
@@ -107,7 +111,7 @@ public:
    * Evaluates the S-expression. If it is of form (func x y), evaluates itself
    * and returns the resulting S-expression. Otherwise, returns itself.
    */
-  SExpr Eval(Env* env) const;
+  SExpr Eval(Env *env, Turtle *turtle) const;
   /**
    * Gets string representation of S-expression.
    */

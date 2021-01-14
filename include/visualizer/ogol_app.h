@@ -1,31 +1,67 @@
 #pragma once
 
-#include "cinder/app/App.h"
-#include "cinder/app/RendererGl.h"
-#include "cinder/gl/gl.h"
-#include "visualizer/turtle.h"
+#include <cinder/app/App.h>
+#include <cinder/app/RendererGl.h>
+#include <cinder/gl/gl.h>
 
-namespace ogol {
+#include <core/interpreter.h>
 
-namespace visualizer {
+#include <visualizer/button.h>
+#include <visualizer/model.h>
+#include <visualizer/turtle.h>
+
+using ci::Color;
+using std::string;
+
+using ogol::core::Interpreter;
+using ogol::visualizer::Model;
+
+namespace ogol::visualizer {
 /**
  * Main logic for rendering turtle graphics to the screen.
  */
 class GraphicsRenderer : public ci::app::App {
 public:
   GraphicsRenderer();
+  void setup() override;
   void draw() override;
+  void mouseDown(ci::app::MouseEvent event) override;
 
-  const size_t kWindowWidth = 1920;
-  const size_t kWindowHeight = 1080;
+  const size_t kWindowWidth = 1100;
+  const size_t kWindowHeight = 1000;
 
 private:
-  Turtle turtle_ =
-      Turtle({0, 0}, {1, 0}, 1, kWindowWidth / 2, kWindowHeight / 2);
-  ivec2 prev_;
-  ivec2 current_;
+  // model
+  Model model_;
+  bool is_rendering_ = false;
+  // view
+  const size_t kTopBarHeight = 40;
+  const Color kOutlineColor = Color("black");
+  const Color kButtonColor = Color::gray(0.9f);
+  vector<TurtleState> states_;
+  size_t current_state_index_ = 0;
+  // controller
+  Button run_button_;
+  string kScriptsDir = "/home/timothy/documents/";
+  vector<string> kExtensions = {"ogl"};
+
+  /**
+   * Adds TurtleStates to be drawn to the screen.
+   */
+  void SetStates(const vector<TurtleState> &states);
+  /**
+   * Renders the computed TurtleStates to the screen.
+   */
+  void RenderGraphics();
+  /**
+   * Converts from the vector space of the turtle to screen space.
+   */
+  ivec2 ToScreenSpace(const ivec2 &coord) const;
+
+  /**
+   * Opens a file dialogue, returns absolute path.
+   */
+  string GetPath() const;
 };
 
-} // namespace visualizer
-
-} // namespace ogol
+} // namespace ogol::visualizer

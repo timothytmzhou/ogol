@@ -6,22 +6,22 @@
 
 namespace ogol::core {
 
-SExpr Print(const SExpr &args, Env *env) {
+SExpr Print(const SExpr &args, Env *env, Turtle *turtle) {
   if (args.size() == 1) {
-    std::cout << args.GetHead().Eval(env).str() << "\n";
+    std::cout << args.GetHead().Eval(env, turtle).str() << "\n";
   } else {
     throw ArgumentError("print expects one argument.");
   }
   return SExpr();
 }
 
-SExpr Define(const SExpr &args, Env *env) {
+SExpr Define(const SExpr &args, Env *env, Turtle *turtle) {
   SExpr head = args.GetHead();
   SExpr tail = args.GetTail();
   if (tail.size() != 1) {
     throw DefinitionError("Must assign one value to a name.");
   }
-  tail = tail.GetHead().Eval(env);
+  tail = tail.GetHead().Eval(env, turtle);
   if (!head.IsAtomic() &&
       head.AsAtom().token.token_type == TokenType::kIdentifier) {
     throw DefinitionError("Cannot define value for a non-identifier.");
@@ -45,11 +45,11 @@ void CheckNumeric(const SExpr &args) {
   }
 }
 
-SExpr Add(const SExpr &args, Env *env) {
+SExpr Add(const SExpr &args, Env *env, Turtle *turtle) {
   CheckNumeric(args);
-  SExpr head = args.GetHead().Eval(env);
+  SExpr head = args.GetHead().Eval(env, turtle);
   SExpr tail = args.GetTail();
-  Atom tail_val = tail.IsNil() ? Atom(0) : Add(tail, env).AsAtom();
+  Atom tail_val = tail.IsNil() ? Atom(0) : Add(tail, env, turtle).AsAtom();
   TokenType head_type = head.AsAtom().token.token_type;
   TokenType tail_type = tail_val.token.token_type;
   if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
@@ -65,11 +65,11 @@ SExpr Add(const SExpr &args, Env *env) {
   }
 }
 
-SExpr Sub(const SExpr &args, Env *env) {
+SExpr Sub(const SExpr &args, Env *env, Turtle *turtle) {
   CheckNumeric(args);
-  SExpr head = args.GetHead().Eval(env);
+  SExpr head = args.GetHead().Eval(env, turtle);
   SExpr tail = args.GetTail();
-  Atom tail_val = tail.IsNil() ? Atom(0) : Add(tail, env).AsAtom();
+  Atom tail_val = tail.IsNil() ? Atom(0) : Add(tail, env, turtle).AsAtom();
   TokenType head_type = head.AsAtom().token.token_type;
   TokenType tail_type = tail_val.token.token_type;
   if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
@@ -85,11 +85,11 @@ SExpr Sub(const SExpr &args, Env *env) {
   }
 }
 
-SExpr Mul(const SExpr &args, Env *env) {
+SExpr Mul(const SExpr &args, Env *env, Turtle *turtle) {
   CheckNumeric(args);
-  SExpr head = args.GetHead().Eval(env);
+  SExpr head = args.GetHead().Eval(env, turtle);
   SExpr tail = args.GetTail();
-  Atom tail_val = tail.IsNil() ? Atom(1) : Mul(tail, env).AsAtom();
+  Atom tail_val = tail.IsNil() ? Atom(1) : Mul(tail, env, turtle).AsAtom();
   TokenType head_type = head.AsAtom().token.token_type;
   TokenType tail_type = tail_val.token.token_type;
   if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
@@ -105,11 +105,11 @@ SExpr Mul(const SExpr &args, Env *env) {
   }
 }
 
-SExpr Div(const SExpr &args, Env *env) {
+SExpr Div(const SExpr &args, Env *env, Turtle *turtle) {
   CheckNumeric(args);
-  SExpr head = args.GetHead().Eval(env);
+  SExpr head = args.GetHead().Eval(env, turtle);
   SExpr tail = args.GetTail();
-  Atom tail_val = tail.IsNil() ? Atom(1) : Mul(tail, env).AsAtom();
+  Atom tail_val = tail.IsNil() ? Atom(1) : Mul(tail, env, turtle).AsAtom();
   TokenType head_type = head.AsAtom().token.token_type;
   TokenType tail_type = tail_val.token.token_type;
   if (head_type == TokenType::kInteger && tail_type == TokenType::kInteger) {
@@ -125,14 +125,29 @@ SExpr Div(const SExpr &args, Env *env) {
   }
 }
 
-SExpr Rotate(const SExpr &args, Env *env) {
+SExpr Forward(const SExpr &args, Env *env, Turtle *turtle) {
   if (args.size() == 1) {
     CheckNumeric(args);
-    Atom head = args.GetHead().Eval(env).AsAtom();
+    Atom head = args.GetHead().Eval(env, turtle).AsAtom();
     if (head.token.token_type == TokenType::kInteger) {
-      env->turtle.Rotate(head.int_value);
+      turtle->Forward(head.int_value);
     } else {
-      env->turtle.Rotate(head.real_value);
+      turtle->Forward(head.real_value);
+    }
+  } else {
+    throw ArgumentError("forward expects one argument.");
+  }
+  return SExpr();
+}
+
+SExpr Rotate(const SExpr &args, Env *env, Turtle *turtle) {
+  if (args.size() == 1) {
+    CheckNumeric(args);
+    Atom head = args.GetHead().Eval(env, turtle).AsAtom();
+    if (head.token.token_type == TokenType::kInteger) {
+      turtle->Rotate(head.int_value);
+    } else {
+      turtle->Rotate(head.real_value);
     }
   } else {
     throw ArgumentError("rotate expects one argument.");
@@ -140,17 +155,42 @@ SExpr Rotate(const SExpr &args, Env *env) {
   return SExpr();
 }
 
-SExpr SetSpeed(const SExpr &args, Env *env) {
+SExpr SetSpeed(const SExpr &args, Env *env, Turtle *turtle) {
   if (args.size() == 1) {
     CheckNumeric(args);
-    Atom head = args.GetHead().Eval(env).AsAtom();
+    Atom head = args.GetHead().Eval(env, turtle).AsAtom();
     if (head.token.token_type == TokenType::kInteger) {
-      env->turtle.SetSpeed(head.int_value);
+      turtle->SetSpeed(head.int_value);
     } else {
-      env->turtle.SetSpeed(head.real_value);
+      turtle->SetSpeed(head.real_value);
     }
   } else {
     throw ArgumentError("speed expects one argument.");
+  }
+  return SExpr();
+}
+
+static map<string, Color> colors = {
+    {"red", Color("red")},       {"blue", Color("blue")},
+    {"green", Color("green")},   {"black", Color("black")},
+    {"brown", Color("brown")},   {"white", Color("white")},
+    {"yellow", Color("yellow")}, {"orange", Color("orange")},
+    {"pink", Color("pink")},     {"purple", Color("purple")},
+};
+
+SExpr SetColor(const SExpr &args, Env *env, Turtle *turtle) {
+  if (args.size() == 1) {
+    Atom head = args.GetHead().Eval(env, turtle).AsAtom();
+    if (head.token.token_type == TokenType::kString) {
+      if (colors.find(head.string_value) == colors.end()) {
+        throw ArgumentError("Unrecognized color.");
+      }
+      turtle->SetColor(colors[head.string_value]);
+    } else {
+      throw ArgumentError("Colors should be passed in as strings.");
+    }
+  } else {
+    throw ArgumentError("color expects one argument.");
   }
   return SExpr();
 }
